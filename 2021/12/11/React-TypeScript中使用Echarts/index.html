@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="John Doe">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="John Doe">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta name="description" content="React-TypeScript 中使用 Echarts目录 第 1 步：全局安装 Create-React-App 第 2 步：创建基本环境 React + TypeScript + Scss + Alias 第 3 步：整理规划 src 目录结构(可选操作) 第 4 步：安装 Echart 模块 第 5 步：编写 Hello World (封装自己的 Echart) 第 6 步：更加精细化封装">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React-TypeScript中使用Echarts">
+<meta property="og:url" content="http://example.com/2021/12/11/React-TypeScript%E4%B8%AD%E4%BD%BF%E7%94%A8Echarts/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="React-TypeScript 中使用 Echarts目录 第 1 步：全局安装 Create-React-App 第 2 步：创建基本环境 React + TypeScript + Scss + Alias 第 3 步：整理规划 src 目录结构(可选操作) 第 4 步：安装 Echart 模块 第 5 步：编写 Hello World (封装自己的 Echart) 第 6 步：更加精细化封装">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-12-10T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-02-07T00:55:18.238Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>React-TypeScript中使用Echarts · skrjs&#39;s Studio</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>skrjs's Studio.</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">skrjs&#39;s Studio.</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">React-TypeScript中使用Echarts</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:50vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+    
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                React-TypeScript中使用Echarts
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+</div>
+
+                
+                <!-- 文章字数统计 -->
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2021/12/11</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="React-TypeScript-中使用-Echarts"><a href="#React-TypeScript-中使用-Echarts" class="headerlink" title="React-TypeScript 中使用 Echarts"></a>React-TypeScript 中使用 Echarts</h1><h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><a href="#%E7%AC%AC1%E6%AD%A5%EF%BC%9A%E5%85%A8%E5%B1%80%E5%AE%89%E8%A3%85Create-React-App">第 1 步：全局安装 Create-React-App</a></li>
+<li><a href="#%E7%AC%AC2%E6%AD%A5%EF%BC%9A%E5%88%9B%E5%BB%BA%E5%9F%BA%E6%9C%AC%E7%8E%AF%E5%A2%83%20React%20+%20TypeScript%20+%20Scss%20+%20Alias">第 2 步：创建基本环境 React + TypeScript + Scss + Alias</a></li>
+<li><a href="#%E7%AC%AC3%E6%AD%A5%EF%BC%9A%E6%95%B4%E7%90%86%E8%A7%84%E5%88%92src%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84(%E5%8F%AF%E9%80%89%E6%93%8D%E4%BD%9C)">第 3 步：整理规划 src 目录结构(可选操作)</a></li>
+<li><a href="#%E7%AC%AC4%E6%AD%A5%EF%BC%9A%E5%AE%89%E8%A3%85Echart%E6%A8%A1%E5%9D%97">第 4 步：安装 Echart 模块</a></li>
+<li><a href="#%E7%AC%AC5%E6%AD%A5%EF%BC%9A%E7%BC%96%E5%86%99Hello%20World%20(%E5%B0%81%E8%A3%85%E8%87%AA%E5%B7%B1%E7%9A%84Echart)">第 5 步：编写 Hello World (封装自己的 Echart)</a></li>
+<li><a href="#%E7%AC%AC6%E6%AD%A5%EF%BC%9A%E6%9B%B4%E5%8A%A0%E7%B2%BE%E7%BB%86%E5%8C%96%E5%B0%81%E8%A3%85Echart%E7%BB%84%E4%BB%B6">第 6 步：更加精细化封装 Echart 组件</a></li>
+<li><a href="#%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8%E7%99%BE%E5%BA%A6%E5%9C%B0%E5%9B%BE">组件中使用百度地图</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81%E8%A1%A5%E5%85%85">代码补充</a></li>
+</ul>
+<blockquote>
+<p>本文中使用 yarn 安装各种所需模块，而不是 npm。</p>
+<p>yarn 的命令和 npm 非常像，可查看我的另外一篇文章：<a target="_blank" rel="noopener" href="https://github.com/puxiao/notes/blob/master/Yarn%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8.md">Yarn 安装与使用.md</a></p>
+</blockquote>
+<h2 id="第-1-步：全局安装-Create-React-App"><a href="#第-1-步：全局安装-Create-React-App" class="headerlink" title="第 1 步：全局安装 Create-React-App"></a>第 1 步：全局安装 Create-React-App</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn global add create-react-app</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>为了确保你的 create-react-app 是最新的，我建议你先卸载之前安装过的 create-react-app，重新安装最新版本。本文使用的是 creat-react-app，其中 react 版本为 17.0.1</p>
+<p>卸载命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm uninstall -g create-react-app</span><br><span class="line">或</span><br><span class="line">yarn global remove create-react-app</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h2 id="第-2-步：创建基本环境-React-TypeScript-Scss-Alias"><a href="#第-2-步：创建基本环境-React-TypeScript-Scss-Alias" class="headerlink" title="第 2 步：创建基本环境 React + TypeScript + Scss + Alias"></a>第 2 步：创建基本环境 React + TypeScript + Scss + Alias</h2><h4 id="1、初始化-React-TypeScript-项目："><a href="#1、初始化-React-TypeScript-项目：" class="headerlink" title="1、初始化 React + TypeScript 项目："></a>1、初始化 React + TypeScript 项目：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn create react-app test-rect --template typescript</span><br></pre></td></tr></table></figure>
+
+<h4 id="2、修改-tsconfig-json-配置-可选操作"><a href="#2、修改-tsconfig-json-配置-可选操作" class="headerlink" title="2、修改 tsconfig.json 配置(可选操作)"></a>2、修改 tsconfig.json 配置(可选操作)</h4><p><strong>建议在 tsconfig.json compilerOptions 中增加以下内容：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;compilerOptions&quot;: &#123;</span><br><span class="line">    ...</span><br><span class="line">    &quot;noUnusedLocals&quot;: true, //有未使用的变量，则报错</span><br><span class="line">    &quot;noUnusedParameters&quot;: true, //有未使用的参数，则报错</span><br><span class="line">    &quot;sourceMap&quot;: true, //测试开发阶段，为了快速定位错误建议设置为 true，待到正式发布时修改为 false</span><br><span class="line">    &quot;removeComments&quot;: false, //删除注释，待到正式发布时修改为 true</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3、添加-Scss-x2F-Sass-支持"><a href="#3、添加-Scss-x2F-Sass-支持" class="headerlink" title="3、添加 Scss&#x2F;Sass 支持"></a>3、添加 Scss&#x2F;Sass 支持</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//sass最新版本为 5.0.0</span><br><span class="line">//但是由于目前 create-react-app 中的 sass-loader 目前不支持 sass 5，所以只能先安装 sass 4</span><br><span class="line">yarn add node-sass@4.14.1 --dev</span><br></pre></td></tr></table></figure>
+
+<p>安装完成过后，即可将项目中的 .css 文件修改为 .scss 文件</p>
+<h4 id="4、添加-alias-支持"><a href="#4、添加-alias-支持" class="headerlink" title="4、添加 alias 支持"></a>4、添加 alias 支持</h4><p>个人建议通过 react-app-rewired 和 react-app-rewire-alias 来实现 alias。</p>
+<p>具体操作可参考：<a target="_blank" rel="noopener" href="https://github.com/puxiao/notes/blob/master/Create-React-App%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8.md#%E9%85%8D%E7%BD%AEalias%E8%B7%AF%E5%BE%84%E6%98%A0%E5%B0%84">配置 alias 路径映射</a></p>
+<blockquote>
+<p>由于之前写示例时并未配置 alias，所以本文后面的示例实际代码中，引入模块时并未真正使用到 alias，但这并不影响任何代码运行效果，此处仅做告知。</p>
+</blockquote>
+<h2 id="第-3-步：整理规划-src-目录结构-可选操作"><a href="#第-3-步：整理规划-src-目录结构-可选操作" class="headerlink" title="第 3 步：整理规划 src 目录结构(可选操作)"></a>第 3 步：整理规划 src 目录结构(可选操作)</h2><p>常见的项目 src 目录结构，应该如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">src</span><br><span class="line">|_ components/</span><br><span class="line">|_ hooks/</span><br><span class="line">|_ pages</span><br><span class="line">|_ app.tsx</span><br><span class="line">|_ index.tsx</span><br></pre></td></tr></table></figure>
+
+<p>components 用来存放各种自定义组件、hooks 目录用来存放自定义 react hooks、pages 目录用来存放 页面。</p>
+<p>在此基础上，可以再次增加其他目录，例如 types(类型声明)、config(配置文件)等等。</p>
+<p><strong>提醒：</strong> 每个组件或页面都应该是一个独立的目录，该目录包含：</p>
+<ol>
+<li>index.scss：组件或页面的样式</li>
+<li>index.tsx：组件或页面本身</li>
+</ol>
+<blockquote>
+<p>以上仅为个人推荐配置方式，当然你可以完全根据自己喜好，自己设定代码目录结构</p>
+</blockquote>
+<h2 id="第-4-步：安装-Echart-模块"><a href="#第-4-步：安装-Echart-模块" class="headerlink" title="第 4 步：安装 Echart 模块"></a>第 4 步：安装 Echart 模块</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add echarts @types/echarts --save</span><br></pre></td></tr></table></figure>
+
+<h2 id="React-使用-Echarts-流程说明"><a href="#React-使用-Echarts-流程说明" class="headerlink" title="React 使用 Echarts 流程说明"></a>React 使用 Echarts 流程说明</h2><blockquote>
+<p>以下是整个使用 Echart 的逻辑，因此特别划重点，一定要搞明白！</p>
+</blockquote>
+<h4 id="React-中使用-Echarts，需要知道的知识点"><a href="#React-中使用-Echarts，需要知道的知识点" class="headerlink" title="React 中使用 Echarts，需要知道的知识点"></a>React 中使用 Echarts，需要知道的知识点</h4><p>1、Echarts 是基于原生 JS 的库，而不是 React 组件，需要将 “图表” 挂载到 DOM</p>
+<p>2、echarts.init(xxx-dom) 是创建 “图表” 的入口函数，该函数将创建创建真正的图表，并挂载到 xxx-dom 中</p>
+<p>3、每一个图表 对应一个 DOM</p>
+<p>4、图表实例通过 setOption(option) 来设置(更新)数据</p>
+<h4 id="React-针对以上-Echarts-特性，对应的-hooks"><a href="#React-针对以上-Echarts-特性，对应的-hooks" class="headerlink" title="React 针对以上 Echarts 特性，对应的 hooks"></a>React 针对以上 Echarts 特性，对应的 hooks</h4><p>1、使用 useRef 来勾住 jsx 中的某个 DOM</p>
+<p>2、使用 useEffect( () &#x3D;&gt; {}, [] ) 来勾住 React 第一次挂载，并通过 echarts.init(xxx-dom) 创建出真正的图表</p>
+<p>3、使用 useState 来勾住 创建出的真正图表，以便以后做各种更新操作</p>
+<p>4、使用 useEffect( () &#x3D;&gt; {}, [xxx-echart,option] ) 来不断监听组件传递过来的数据变化，并更新图表数据</p>
+<h2 id="第-5-步：编写-Hello-World-封装自己的-Echart"><a href="#第-5-步：编写-Hello-World-封装自己的-Echart" class="headerlink" title="第 5 步：编写 Hello World (封装自己的 Echart)"></a>第 5 步：编写 Hello World (封装自己的 Echart)</h2><blockquote>
+<p>细节不过多说，此处只演示 2 个组件源码</p>
+<ol>
+<li>子组件为一个图表，图表是什么类型，由 配置数据 option 中 xAxis.type 的值决定</li>
+<li>父组件负责调用子组件并传递图表配置数据</li>
+</ol>
+</blockquote>
+<p><strong>父组件：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">import React from &#x27;react&#x27;</span><br><span class="line">import &#123; EChartOption &#125; from &#x27;echarts&#x27;</span><br><span class="line">import Echart from &#x27;../../components/echart&#x27;</span><br><span class="line"></span><br><span class="line">import &#x27;./index.scss&#x27;</span><br><span class="line"></span><br><span class="line">const option: EChartOption = &#123;</span><br><span class="line">    xAxis: &#123;</span><br><span class="line">        type: &#x27;category&#x27;,</span><br><span class="line">        data: [&#x27;Mon&#x27;, &#x27;Tue&#x27;, &#x27;Wed&#x27;, &#x27;Thu&#x27;, &#x27;Fri&#x27;, &#x27;Sat&#x27;, &#x27;Sun&#x27;]</span><br><span class="line">    &#125;,</span><br><span class="line">    yAxis: &#123;</span><br><span class="line">        type: &#x27;value&#x27;</span><br><span class="line">    &#125;,</span><br><span class="line">    series: [&#123;</span><br><span class="line">        data: [820, 932, 901, 934, 1290, 1330, 1320],</span><br><span class="line">        type: &#x27;line&#x27;</span><br><span class="line">    &#125;]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const IndexPage: React.FC = () =&gt; &#123;</span><br><span class="line">    return (</span><br><span class="line">        &lt;Echart option=&#123;option&#125; /&gt;</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">export default IndexPage</span><br></pre></td></tr></table></figure>
+
+<p><strong>子组件：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">import React, &#123; useState, useRef, useEffect &#125; from &#x27;react&#x27;</span><br><span class="line">import echarts, &#123; EChartOption, ECharts &#125; from &#x27;echarts&#x27;</span><br><span class="line"></span><br><span class="line">import &#x27;./index.scss&#x27;</span><br><span class="line"></span><br><span class="line">interface EchartProp &#123;</span><br><span class="line">    option: EChartOption</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const Echart: React.FC&lt;EchartProp&gt; = (&#123; option &#125;) =&gt; &#123;</span><br><span class="line"></span><br><span class="line">    const chartRef = useRef&lt;HTMLDivElement&gt;(null) //用来勾住渲染后的 DOM</span><br><span class="line">    const [echartsInstance, setEchartsInstance] = useState&lt;ECharts&gt;() //用来勾住生成后的 图表实例对象</span><br><span class="line"></span><br><span class="line">    //仅第一次挂载时执行，将 DOM 传递给 echarts，通过 echarts.init() 得到真正的图表 JS 对象</span><br><span class="line">    useEffect(() =&gt; &#123;</span><br><span class="line">        if (chartRef.current) &#123;</span><br><span class="line">            setEchartsInstance(echarts.init(chartRef.current))</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;, [])</span><br><span class="line"></span><br><span class="line">    //监听依赖变化，并根据需要更新图表数据</span><br><span class="line">    useEffect(() =&gt; &#123;</span><br><span class="line">        echartsInstance?.clear() //清除之前的数据缓存</span><br><span class="line">        echartsInstance?.setOption(option)</span><br><span class="line">    &#125;, [echartsInstance, option])</span><br><span class="line"></span><br><span class="line">    return (</span><br><span class="line">        &lt;div ref=&#123;chartRef&#125; className=&#x27;echarts&#x27; /&gt;</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">export default Echart</span><br></pre></td></tr></table></figure>
+
+<h2 id="第-6-步：更加精细化封装-Echart-组件"><a href="#第-6-步：更加精细化封装-Echart-组件" class="headerlink" title="第 6 步：更加精细化封装 Echart 组件"></a>第 6 步：更加精细化封装 Echart 组件</h2><p>在第 5 步时，虽然已经完成了 Echarts 的 基础示例，但是上述代码中对 Echart 的封装不够精细化。</p>
+<p><strong>接下来对 Echart 进行以下几点的封装：</strong></p>
+<ol>
+<li><p>给组件添加 key 属性，以便 echarts 进行多组件联动</p>
+</li>
+<li><p>给组件添加 style 属性，默认值设置为：{ width: ‘100%’, height:’100%’ }</p>
+</li>
+<li><p>添加浏览器窗口发小变化事件的侦听。假设组件高宽并非固定，而是采用动态计算得出的，例如我们设定的默认 style 高宽为 100%，那么需要在组件所在容器的 div 尺寸发生变化后，重新渲染组件。</p>
+<blockquote>
+<p>echarts 默认并不支持 自动随着父级容器尺寸变化而进行缩放</p>
+</blockquote>
+</li>
+</ol>
+<p><strong>我们可以定义 Echart 组件的参数如下：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">export type EchartProp = &#123;</span><br><span class="line">    option: EChartOption,</span><br><span class="line">    key?: string,</span><br><span class="line">    style?: &#123;</span><br><span class="line">        width: string,</span><br><span class="line">        height: string</span><br><span class="line">    &#125;</span><br><span class="line">    className?: string</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>优化可选参数，将 undefined 值剔除：</strong></p>
+<p>由于存在可选参数，为了避免一些不必要的属性赋值，所以我们可以将得到的组件参数先进行解构，然后再剔除未被赋值的可选参数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">const removeUndefined = (obj: object) =&gt; &#123;</span><br><span class="line">    for (let key in obj) &#123;</span><br><span class="line">        if (obj[key as keyof typeof obj] === undefined) &#123;</span><br><span class="line">            delete obj[key as keyof typeof obj]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return obj</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在 TS 严格模式下，直接使用 obj[key] 会产生报错，必须使用 obj[key as keyof typeof obj] 才可以</p>
+</blockquote>
+<p><strong>最终改造后的 自定义 Echart 组件代码如下：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">import React, &#123; useState, useRef, useEffect &#125; from &#x27;react&#x27;</span><br><span class="line">import echarts, &#123; EChartOption, ECharts &#125; from &#x27;echarts&#x27;</span><br><span class="line"></span><br><span class="line">export type EchartProp = &#123;</span><br><span class="line">    option: EChartOption,</span><br><span class="line">    key?: string,</span><br><span class="line">    style?: &#123;</span><br><span class="line">        width: string,</span><br><span class="line">        height: string</span><br><span class="line">    &#125;</span><br><span class="line">    className?: string</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const removeUndefined = (obj: object) =&gt; &#123;</span><br><span class="line">    for (let key in obj) &#123;</span><br><span class="line">        if (obj[key as keyof typeof obj] === undefined) &#123;</span><br><span class="line">            delete obj[key as keyof typeof obj]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return obj</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const Echart: React.FC&lt;EchartProp&gt; = (&#123; option, key, className, style = &#123; width: &#x27;100%&#x27;, height: &#x27;100%&#x27; &#125; &#125;) =&gt; &#123;</span><br><span class="line"></span><br><span class="line">    const chartRef = useRef&lt;HTMLDivElement&gt;(null)</span><br><span class="line">    const [echartsInstance, setEchartsInstance] = useState&lt;ECharts&gt;()</span><br><span class="line"></span><br><span class="line">    useEffect(() =&gt; &#123;</span><br><span class="line">        setEchartsInstance(echarts.init(chartRef.current as HTMLDivElement))</span><br><span class="line">    &#125;, [])</span><br><span class="line"></span><br><span class="line">    useEffect(() =&gt; &#123;</span><br><span class="line">        const handleResize = () =&gt; &#123;</span><br><span class="line">            echartsInstance?.resize()</span><br><span class="line">        &#125;</span><br><span class="line">        window.addEventListener(&#x27;resize&#x27;, handleResize)</span><br><span class="line">        return () =&gt; &#123;</span><br><span class="line">            window.removeEventListener(&#x27;resize&#x27;, handleResize)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;, [echartsInstance])</span><br><span class="line"></span><br><span class="line">    useEffect(() =&gt; &#123;</span><br><span class="line">        echartsInstance?.setOption(option)</span><br><span class="line">    &#125;, [echartsInstance, option])</span><br><span class="line"></span><br><span class="line">    return (</span><br><span class="line">        &lt;div ref=&#123;chartRef&#125; &#123;...removeUndefined(&#123; option, key, className, style &#125;)&#125; /&gt;</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">export default Echart</span><br></pre></td></tr></table></figure>
+
+<h2 id="组件中使用百度地图"><a href="#组件中使用百度地图" class="headerlink" title="组件中使用百度地图"></a>组件中使用百度地图</h2><p>在 Echarts 的某些组件中，会使用到百度地图。</p>
+<blockquote>
+<p>应国家地图使用规范要求，百度地图已经下架了用户自己创建的地图数据包，例如 china.json，要求使用地图必须严格规范，因此使用百度地图称为首选。</p>
+</blockquote>
+<p><strong>在使用包含 百度地图 的组件中，关于百度地图相关知识点，有以下内容：</strong></p>
+<ol>
+<li><p>每一个百度地图项目，都应该去百度地图开放平台申请亲一个 APP，得到 APP 对应的 key</p>
+</li>
+<li><p>假设需要自定义地图外观样式，那么还需要在百度地图中心，创建自己的百度地图样式，得到自定义地图样式的 styleId</p>
+</li>
+<li><p>在 public&#x2F;index.html 中，网页 &lt;head&gt; 中添加引入 百度地图 SDK，目前推荐使用 api 3.0，代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;https://api.map.baidu.com/api?v=3.0&amp;amp;ak=2KxVITWlyImK24SghDcdwP8qKBCkFZX6&amp;amp;&quot;&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>上述代码中的 ak&#x3D;2KxVITWlyImK24SghDcdwP8qKBCkFZX6&amp;amp 是我自己申请的，将来你需要自己去百度地图开放平台免费申请自己的 key。</p>
+</blockquote>
+</li>
+<li><p>在自定义 地图 相关 React 组件中，引入 bmap.js，只有引入这个才可以让 React 正常与网页进行地图显示与交互</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#x27;echarts/extension/bmap/bmap&#x27;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>包含百度地图的组件，在组件配置项中，比一般的组件要额外多出一个字段 bmap，请注意这里的 bmap 是为了配置百度地图，和 引入的 bmap.js 相互呼应，但是 2 者并不是同一个对象：一个是 bmap.js，另外一个是 bmap.js 对应的配置项 bmap</p>
+</li>
+<li><p>请注意：在最新版的 @types&#x2F;echarts 4.9.1 中，组件配置项 MapECartOption 中不存在 bmap 字段，需要我们手工的去拓展这个字段，不然当我们添加 bmap 字段时，TS 会报错。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">interface MapECartOption extends EChartOption &#123;</span><br><span class="line">    bmap?: object</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>事实上 bmap 有自己特殊的定义规范，但是为了简化，我们暂时选择直接将 bmap 数据类型定义为 object</p>
+</blockquote>
+</li>
+<li><p>特别说明：在 bmap 配置相中，mapStyleV2 字段的值应该设置为：mapStyleV2: { styleId: ‘86249896ec18867e1ef906a088e8b9b1’ }，这样就会以我们自定义的百度地图样式来显示。</p>
+<blockquote>
+<p>如果不用 mapStyleV2，而是使用 mapStyle，则使用内置固定的样式来显示百度地图，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mapStyle: &#123;</span><br><span class="line">   styleJson: [&#123;</span><br><span class="line">       &#x27;featureType&#x27;: &#x27;water&#x27;,</span><br><span class="line">       &#x27;elementType&#x27;: &#x27;all&#x27;,</span><br><span class="line">       &#x27;stylers&#x27;: &#123;</span><br><span class="line">           &#x27;color&#x27;: &#x27;#d1d1d1&#x27;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;, &#123;</span><br><span class="line">       &#x27;featureType&#x27;: &#x27;land&#x27;,</span><br><span class="line">       &#x27;elementType&#x27;: &#x27;all&#x27;,</span><br><span class="line">       &#x27;stylers&#x27;: &#123;</span><br><span class="line">           &#x27;color&#x27;: &#x27;#f3f3f3&#x27;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;,</span><br><span class="line">   ....</span><br></pre></td></tr></table></figure></blockquote>
+</li>
+</ol>
+<p><strong>完整的示例代码：</strong></p>
+<p>最终，附上一个简单的，但完整的 包含百度地图的 Echarts 组件示例：</p>
+<blockquote>
+<p>注意：以下代码中的 &lt;Echart&#x2F;&gt; 就是我们在本文 <code>第6步：更加精细化封装Echart组件</code> 中自己封装的 echarts 组件。</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br></pre></td><td class="code"><pre><span class="line">import React from &#x27;react&#x27;</span><br><span class="line">import &#123; EChartOption &#125; from &#x27;echarts&#x27;</span><br><span class="line">import &#x27;echarts/extension/bmap/bmap&#x27;</span><br><span class="line">import Echart from &#x27;../echart&#x27;</span><br><span class="line"></span><br><span class="line">// 以下为我们内部定义好的 Echart 组件源数据，这段代码实际和 Echart 示例并无特别大的关联</span><br><span class="line">type dataType = &#123;</span><br><span class="line">    name: string,</span><br><span class="line">    value: number</span><br><span class="line">&#125;[]</span><br><span class="line"></span><br><span class="line">const data: dataType = [</span><br><span class="line">    &#123; name: &#x27;廊坊&#x27;, value: 193 &#125;,</span><br><span class="line">    &#123; name: &#x27;菏泽&#x27;, value: 194 &#125;,</span><br><span class="line">    &#123; name: &#x27;合肥&#x27;, value: 229 &#125;,</span><br><span class="line">    &#123; name: &#x27;武汉&#x27;, value: 273 &#125;,</span><br><span class="line">    &#123; name: &#x27;大庆&#x27;, value: 279 &#125;</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line">type geoCoorMapType = &#123; [key: string]: number[] &#125;</span><br><span class="line">const geoCoordMap: geoCoorMapType = &#123;</span><br><span class="line">    &#x27;廊坊&#x27;: [116.7, 39.53],</span><br><span class="line">    &#x27;菏泽&#x27;: [115.480656, 35.23375],</span><br><span class="line">    &#x27;合肥&#x27;: [117.27, 31.86],</span><br><span class="line">    &#x27;武汉&#x27;: [114.31, 30.52],</span><br><span class="line">    &#x27;大庆&#x27;: [125.03, 46.58]</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">let convertData = function (data: dataType) &#123;</span><br><span class="line">    let res = [];</span><br><span class="line">    for (let i = 0; i &lt; data.length; i++) &#123;</span><br><span class="line">        let geoCoord = geoCoordMap[data[i].name];</span><br><span class="line">        if (geoCoord) &#123;</span><br><span class="line">            res.push(&#123;</span><br><span class="line">                name: data[i].name,</span><br><span class="line">                value: geoCoord.concat(data[i].value)</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return res;</span><br><span class="line">&#125;;</span><br><span class="line">// 以上为我们内部定义好的 Echart 组件源数据，这段代码实际和 Echart 示例并无特别大的关联</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//我们自己扩展出 bmap 字段</span><br><span class="line">interface MapECartOption extends EChartOption &#123;</span><br><span class="line">    bmap?: object</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//地图组件的配置数据，请重点留意 bmap 字段对应的各项配置</span><br><span class="line">const option: MapECartOption = &#123;</span><br><span class="line">    tooltip: &#123;&#125;,</span><br><span class="line">    bmap: &#123;</span><br><span class="line">        center: [104.114129, 37.550339],</span><br><span class="line">        zoom: 5,</span><br><span class="line">        roam: true,</span><br><span class="line">        mapStyleV2: &#123;</span><br><span class="line">            styleId: &#x27;86249896ec18867e1ef906a088e8b9b1&#x27;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    series: [</span><br><span class="line">        &#123;</span><br><span class="line">            name: &#x27;PM2.5&#x27;,</span><br><span class="line">            type: &#x27;scatter&#x27;,</span><br><span class="line">            coordinateSystem: &#x27;bmap&#x27;,</span><br><span class="line">            data: convertData(data),</span><br><span class="line">            symbolSize: function (val: any) &#123;</span><br><span class="line">                return val[2] / 10;</span><br><span class="line">            &#125;,</span><br><span class="line">            itemStyle: &#123;</span><br><span class="line">                normal: &#123;</span><br><span class="line">                    color: &#x27;#c23531&#x27;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            name: &#x27;top5&#x27;,</span><br><span class="line">            type: &#x27;effectScatter&#x27;,</span><br><span class="line">            coordinateSystem: &#x27;bmap&#x27;,</span><br><span class="line">            data: convertData(data.sort(function (a, b) &#123;</span><br><span class="line">                return b.value - a.value;</span><br><span class="line">            &#125;).slice(0, 5)),</span><br><span class="line">            symbolSize: function (val: any) &#123;</span><br><span class="line">                return val[2] / 10;</span><br><span class="line">            &#125;,</span><br><span class="line">            showEffectOn: &#x27;render&#x27;,</span><br><span class="line">            rippleEffect: &#123;</span><br><span class="line">                brushType: &#x27;stroke&#x27;</span><br><span class="line">            &#125;,</span><br><span class="line">            itemStyle: &#123;</span><br><span class="line">                normal: &#123;</span><br><span class="line">                    color: &#x27;#c23531&#x27;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const MidOne: React.FC = () =&gt; &#123;</span><br><span class="line">    return (</span><br><span class="line">        &lt;Echart option=&#123;option&#125; /&gt;</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">export default MidOne</span><br></pre></td></tr></table></figure>
+
+<p><strong>public&#x2F;index.html 对应源码：</strong></p>
+<blockquote>
+<p>在默认的 index.html 基础上，向 &lt;head&gt; 添加引入 百度地图 sdk</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;head&gt;</span><br><span class="line">  &lt;meta charset=&quot;utf-8&quot; /&gt;</span><br><span class="line">  &lt;link rel=&quot;icon&quot; href=&quot;%PUBLIC_URL%/favicon.ico&quot; /&gt;</span><br><span class="line">  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot; /&gt;</span><br><span class="line">  &lt;meta name=&quot;theme-color&quot; content=&quot;#000000&quot; /&gt;</span><br><span class="line">  &lt;meta name=&quot;description&quot; content=&quot;Web site created using create-react-app&quot; /&gt;</span><br><span class="line">  &lt;title&gt;Data Visualization&lt;/title&gt;</span><br><span class="line">  &lt;script type=&quot;text/javascript&quot;</span><br><span class="line">    src=&quot;https://api.map.baidu.com/api?v=3.0&amp;amp;ak=2KxVITWlyImK24SghDcdwP8qKBCkFZX6&amp;amp;&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line"></span><br><span class="line">&lt;body&gt;</span><br><span class="line">  &lt;noscript&gt;You need to enable JavaScript to run this app.&lt;/noscript&gt;</span><br><span class="line">  &lt;div id=&quot;root&quot;&gt;&lt;/div&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line"></span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+    </article>
+    <!-- license -->
+    
+        <div class="license-wrapper">
+            <p>Author：<a href="http://example.com">John Doe</a>
+            <p>Publish date：<a href="http://example.com/2021/12/11/React-TypeScript%E4%B8%AD%E4%BD%BF%E7%94%A8Echarts/">December 11th 2021, 12:00:00 am</a>
+            <p>Update date：<a href="http://example.com/2021/12/11/React-TypeScript%E4%B8%AD%E4%BD%BF%E7%94%A8Echarts/">February 7th 2023, 8:55:18 am</a>
+            <p>License：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2022/03/13/IndexedDB%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="IndexedDB学习笔记">
+                    <div class="nextTitle">IndexedDB学习笔记</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2021/07/13/Koa%E5%B8%B8%E7%94%A8%E4%B8%AD%E9%97%B4%E4%BB%B6/" title="Koa 常用中间件">
+                    <div class="prevTitle">Koa 常用中间件</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+</main>
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:375259904@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/ilss" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#React-TypeScript-%E4%B8%AD%E4%BD%BF%E7%94%A8-Echarts"><span class="toc-number">1.</span> <span class="toc-text">React-TypeScript 中使用 Echarts</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95"><span class="toc-number">1.1.</span> <span class="toc-text">目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC-1-%E6%AD%A5%EF%BC%9A%E5%85%A8%E5%B1%80%E5%AE%89%E8%A3%85-Create-React-App"><span class="toc-number">1.2.</span> <span class="toc-text">第 1 步：全局安装 Create-React-App</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC-2-%E6%AD%A5%EF%BC%9A%E5%88%9B%E5%BB%BA%E5%9F%BA%E6%9C%AC%E7%8E%AF%E5%A2%83-React-TypeScript-Scss-Alias"><span class="toc-number">1.3.</span> <span class="toc-text">第 2 步：创建基本环境 React + TypeScript + Scss + Alias</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1%E3%80%81%E5%88%9D%E5%A7%8B%E5%8C%96-React-TypeScript-%E9%A1%B9%E7%9B%AE%EF%BC%9A"><span class="toc-number">1.3.0.1.</span> <span class="toc-text">1、初始化 React + TypeScript 项目：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2%E3%80%81%E4%BF%AE%E6%94%B9-tsconfig-json-%E9%85%8D%E7%BD%AE-%E5%8F%AF%E9%80%89%E6%93%8D%E4%BD%9C"><span class="toc-number">1.3.0.2.</span> <span class="toc-text">2、修改 tsconfig.json 配置(可选操作)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3%E3%80%81%E6%B7%BB%E5%8A%A0-Scss-x2F-Sass-%E6%94%AF%E6%8C%81"><span class="toc-number">1.3.0.3.</span> <span class="toc-text">3、添加 Scss&#x2F;Sass 支持</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4%E3%80%81%E6%B7%BB%E5%8A%A0-alias-%E6%94%AF%E6%8C%81"><span class="toc-number">1.3.0.4.</span> <span class="toc-text">4、添加 alias 支持</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC-3-%E6%AD%A5%EF%BC%9A%E6%95%B4%E7%90%86%E8%A7%84%E5%88%92-src-%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84-%E5%8F%AF%E9%80%89%E6%93%8D%E4%BD%9C"><span class="toc-number">1.4.</span> <span class="toc-text">第 3 步：整理规划 src 目录结构(可选操作)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC-4-%E6%AD%A5%EF%BC%9A%E5%AE%89%E8%A3%85-Echart-%E6%A8%A1%E5%9D%97"><span class="toc-number">1.5.</span> <span class="toc-text">第 4 步：安装 Echart 模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#React-%E4%BD%BF%E7%94%A8-Echarts-%E6%B5%81%E7%A8%8B%E8%AF%B4%E6%98%8E"><span class="toc-number">1.6.</span> <span class="toc-text">React 使用 Echarts 流程说明</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#React-%E4%B8%AD%E4%BD%BF%E7%94%A8-Echarts%EF%BC%8C%E9%9C%80%E8%A6%81%E7%9F%A5%E9%81%93%E7%9A%84%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">1.6.0.1.</span> <span class="toc-text">React 中使用 Echarts，需要知道的知识点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#React-%E9%92%88%E5%AF%B9%E4%BB%A5%E4%B8%8A-Echarts-%E7%89%B9%E6%80%A7%EF%BC%8C%E5%AF%B9%E5%BA%94%E7%9A%84-hooks"><span class="toc-number">1.6.0.2.</span> <span class="toc-text">React 针对以上 Echarts 特性，对应的 hooks</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC-5-%E6%AD%A5%EF%BC%9A%E7%BC%96%E5%86%99-Hello-World-%E5%B0%81%E8%A3%85%E8%87%AA%E5%B7%B1%E7%9A%84-Echart"><span class="toc-number">1.7.</span> <span class="toc-text">第 5 步：编写 Hello World (封装自己的 Echart)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC-6-%E6%AD%A5%EF%BC%9A%E6%9B%B4%E5%8A%A0%E7%B2%BE%E7%BB%86%E5%8C%96%E5%B0%81%E8%A3%85-Echart-%E7%BB%84%E4%BB%B6"><span class="toc-number">1.8.</span> <span class="toc-text">第 6 步：更加精细化封装 Echart 组件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8%E7%99%BE%E5%BA%A6%E5%9C%B0%E5%9B%BE"><span class="toc-number">1.9.</span> <span class="toc-text">组件中使用百度地图</span></a></li></ol></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 9
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/21</span>
+            <a class="archive-post-title" href="/2021/01/21/Blender%E5%9F%BA%E7%A1%80%E6%95%99%E7%A8%8B/">Blender 基础教程</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> Invalid date </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span>
+            <a class="archive-post-title" href="/2023/01/31/MacOS%20brew%20install%20%E6%8A%A5%E9%94%99/">MacOS brew install 报错</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/07</span>
+            <a class="archive-post-title" href="/2023/02/07/%E4%B8%8D%E8%A6%81%E4%B9%B0M2Max%E7%9A%8414%E2%80%9DMacBookPro/">MaxTech:某些情况下,不要买 M2Max 的 14”MacBookPro</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/31</span>
+            <a class="archive-post-title" href="/2023/01/31/MacOS%E6%9F%A5%E7%9C%8BSSD%E5%AF%BF%E5%91%BD%E4%BF%A1%E6%81%AF/">MacOS 查看 SSD 寿命信息</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2022 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/13</span>
+            <a class="archive-post-title" href="/2022/03/13/IndexedDB%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">IndexedDB学习笔记</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/11</span>
+            <a class="archive-post-title" href="/2021/12/11/React-TypeScript%E4%B8%AD%E4%BD%BF%E7%94%A8Echarts/">React-TypeScript中使用Echarts</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span>
+            <a class="archive-post-title" href="/2021/07/13/Koa%E5%B8%B8%E7%94%A8%E4%B8%AD%E9%97%B4%E4%BB%B6/">Koa 常用中间件</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2020 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/20</span>
+            <a class="archive-post-title" href="/2020/05/20/PM2%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">PM2学习笔记</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> Invalid date </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span>
+            <a class="archive-post-title" href="/2023/01/30/Nginx%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">Nginx学习笔记</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="Blender">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Blender
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="MacOS">
+            <span class="iconfont-archer">&#xe60a;</span>
+            MacOS
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="IndexedDB">
+            <span class="iconfont-archer">&#xe60a;</span>
+            IndexedDB
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Linux">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Linux
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="React">
+            <span class="iconfont-archer">&#xe60a;</span>
+            React
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Mac">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Mac
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Nginx">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Nginx
+        </span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "http://example.com",
+        root: siteMetaRoot,
+        author: "John Doe"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>

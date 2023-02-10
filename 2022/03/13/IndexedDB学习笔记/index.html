@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="John Doe">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="John Doe">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta name="description" content="IndexedDB 学习笔记假设你想系统学习 IndexedDB，推荐直接去 MDN 上面看官方教程： https:&#x2F;&#x2F;developer.mozilla.org&#x2F;zh-CN&#x2F;docs&#x2F;Web&#x2F;API&#x2F;IndexedDB_API 本文是我在学习 IndexedDB 总结的学习笔记。    本文所谓的 “官方” 是指 MDN 文档，同时也是指 W3C 官方。    前端数据存储 localStora">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IndexedDB学习笔记">
+<meta property="og:url" content="http://example.com/2022/03/13/IndexedDB%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="IndexedDB 学习笔记假设你想系统学习 IndexedDB，推荐直接去 MDN 上面看官方教程： https:&#x2F;&#x2F;developer.mozilla.org&#x2F;zh-CN&#x2F;docs&#x2F;Web&#x2F;API&#x2F;IndexedDB_API 本文是我在学习 IndexedDB 总结的学习笔记。    本文所谓的 “官方” 是指 MDN 文档，同时也是指 W3C 官方。    前端数据存储 localStora">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-03-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-02-08T07:50:59.236Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>IndexedDB学习笔记 · skrjs&#39;s Studio</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>skrjs's Studio.</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">skrjs&#39;s Studio.</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">IndexedDB学习笔记</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:50vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+    
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                IndexedDB学习笔记
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+</div>
+
+                
+                <!-- 文章字数统计 -->
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2022/03/13</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="IndexedDB-学习笔记"><a href="#IndexedDB-学习笔记" class="headerlink" title="IndexedDB 学习笔记"></a>IndexedDB 学习笔记</h1><p>假设你想系统学习 IndexedDB，推荐直接去 MDN 上面看官方教程：</p>
+<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/IndexedDB_API">https://developer.mozilla.org/zh-CN/docs/Web/API/IndexedDB_API</a></p>
+<p>本文是我在学习 IndexedDB 总结的学习笔记。</p>
+<br>
+
+<blockquote>
+<p>本文所谓的 “官方” 是指 MDN 文档，同时也是指 W3C 官方。</p>
+</blockquote>
+<br>
+
+<h4 id="前端数据存储-localStorage、sessionStorage-的缺点"><a href="#前端数据存储-localStorage、sessionStorage-的缺点" class="headerlink" title="前端数据存储 localStorage、sessionStorage 的缺点"></a>前端数据存储 localStorage、sessionStorage 的缺点</h4><p>在前端开发过程中，最经常使用到的本地数据存储是：LocalStorage(本地存储)、SessionStorage(会话存储)</p>
+<p>对于一些简单的数据，它们是够用的，但是对于一些复杂的数据存储，它们就存在以下缺点：</p>
+<ol>
+<li><p>存储格式：它们只能以字符串形式储存数据，复杂数据读写时只能靠 JSON 转换</p>
+</li>
+<li><p>存储大小：localstorage 最大支持 20M、sessionStorage 最大支持 5M</p>
+<blockquote>
+<p>顺道说一下 cookie 最大只支持 4k</p>
+</blockquote>
+</li>
+<li><p>读写方式：它们读写都为同步，会阻塞浏览器 JS 进程</p>
+</li>
+</ol>
+<p><strong>最大的缺点：不支持条件查询</strong></p>
+<p>他们只是负责存储数据，不支持像一般数据库(MySql、MongoDB)那样的 各类查询。</p>
+<br>
+
+<h4 id="IndexedDB-自带得意的背景音乐出场了"><a href="#IndexedDB-自带得意的背景音乐出场了" class="headerlink" title="IndexedDB 自带得意的背景音乐出场了"></a>IndexedDB 自带得意的背景音乐出场了</h4><p>IndexedDB 是目前主流浏览器都支持的一种底层 API 标准，它用来在浏览器(客户端)存储大量的结构化数据，也包括 文件、二进制对象(blobs)。</p>
+<blockquote>
+<p>还有一个叫 Web SQL 的，它原本的功能和 IndexedDB 类似，并且它还早于 IndexedDB 出现，但是后来各大浏览器都逐渐放弃(不主推) 它。</p>
+<p>尽管你在浏览器调试工具 &gt; 应用 &gt; 中还能看到 Web SQL。</p>
+</blockquote>
+<p><strong>IndexedDB 的优势：</strong></p>
+<ol>
+<li><p>储存格式：结构化数据(也就是 JS 中的各种 Object)、文件、二进制对象(blobs)</p>
+</li>
+<li><p>存储大小：最大可以使用你硬盘可用空间的 50%</p>
+<blockquote>
+<p>这里的硬盘应该是指 浏览器 所在的安装目录的那个硬盘</p>
+</blockquote>
+</li>
+<li><p>条件查询：支持</p>
+<blockquote>
+<p>尽管做不到像 MySQL、MongoDB 那样复杂的各种条件(管线)查询，但是对于一般前端项目而言足够了</p>
+</blockquote>
+</li>
+<li><p>支持在 web worker 中操作 IndexedDB</p>
+</li>
+</ol>
+<br>
+
+<p><strong>IndexedDB 的读写是异步的。</strong></p>
+<p>IndexedDB 可以存储各种数据类型、又支持条件查询、最大储存容量又非常大，因此它的读写不是异步的才怪呢。</p>
+<p>好处是：由于是异步，因此每一个操作(增删改查)不会阻塞浏览器 JS 进程</p>
+<p>不好的是：由于是异步，因此每一个操作(增删改查)都需要做异步处理</p>
+<blockquote>
+<p>不过幸好现在都使用 Promise(承诺)，异步用起来也不是特别麻烦</p>
+</blockquote>
+<br>
+
+<p><strong>特别说明：</strong></p>
+<p>由于我个人之前学习过 MySQL 和 MongoDB，所以在学习 IndexedDB 时很多概念都比较容易理解。</p>
+<blockquote>
+<p>这些 “概念” 包括 表、列、键、自增等术语</p>
+</blockquote>
+<br>
+
+<p><strong>捋一下几个名词关系：</strong></p>
+<ol>
+<li><p>在浏览器中，有一个存储区域叫 IndexedDB</p>
+<blockquote>
+<p>就是常规数据库中的数据库本身</p>
+<p>实际对应的是 window.IndexedDB：<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/indexedDB">https://developer.mozilla.org/zh-CN/docs/Web/API/indexedDB</a></p>
+</blockquote>
+</li>
+<li><p>在 IndexedDB 下面，可以创建、管理 多个 数据库(db)</p>
+<blockquote>
+<p>对应常规数据库中的某个数据库</p>
+<p>实际对应的是 IDBDatabase：<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/IDBDatabase">https://developer.mozilla.org/zh-CN/docs/Web/API/IDBDatabase</a></p>
+</blockquote>
+</li>
+<li><p>每一次操作都被视作一个事务</p>
+<blockquote>
+<p>实际对应的是 IDBTransaction：<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/IDBTransaction">https://developer.mozilla.org/zh-CN/docs/Web/API/IDBTransaction</a></p>
+</blockquote>
+</li>
+<li><p>在每一个 数据库(db) 下面可以创建、管理 多个 表</p>
+<blockquote>
+<p>对应常规数据库中的 表</p>
+<p>实际对应的是 IDBObjectStore：<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/IDBObjectStore">https://developer.mozilla.org/zh-CN/docs/Web/API/IDBObjectStore</a></p>
+</blockquote>
+</li>
+<li><p>在每一个 表 里可以创建、管理 多条数据</p>
+<blockquote>
+<p>对应常规数据库中的 行</p>
+</blockquote>
+</li>
+<li><p>在每一条数据中，包含各种键和值</p>
+<blockquote>
+<p>对应常规数据库中的 列</p>
+<p>实际对应的是 IDBIndex：<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/IDBIndex">https://developer.mozilla.org/zh-CN/docs/Web/API/IDBIndex</a></p>
+</blockquote>
+</li>
+</ol>
+<br>
+
+<p><strong>IndexedDB 属于 事务性数据库</strong></p>
+<p>我们看一下百度百科中关于 事务性数据库的定义描述：</p>
+<p>数据库事务( transaction)是访问并可能操作各种数据项的一个数据库操作序列，这些操作要么全部执行,要么全部不执行，是一个不可分割的工作单位。事务由事务开始与事务结束之间执行的全部数据库操作组成。</p>
+<p>转换成比较容易理解的话就是：事(即增删改成操作) 是一件一件来做的，尽管每一件事都是异步的。</p>
+<br>
+
+<p>尽管每一次操作(增删改查)都是异步的，但是如果不同模块中先后都执行了某些操作(增删改成)，你依然可以放心，IndexedDB 都会按照每一次操作的先后顺序来执行，确保每一次操作的独立性和完整性。</p>
+<br>
+
+<p><strong>每一次“增删改查” 都是一个独立的 “事务”</strong></p>
+<blockquote>
+<p>在本文后面，我们会把 增删改查 称呼为 事务。</p>
+</blockquote>
+<br>
+
+<p><strong>关系型 or 非关系型数据库 ？</strong></p>
+<p>IndexedDB 属于关系型数据库还是 非关系型数据库？</p>
+<p>从大体上来讲 IndexedDB 看着更像关系型数据库，例如创建表时需要明确配置各个 键名，并且支持 关键键(id)的自增。但与此同时，对于具体的值又支持各类结构化数据，这些看起来又特别像非关系型数据库的特征。</p>
+<p><strong>因此，我个人认为 IndexedDB 实际上是 关系型数据库和非关系型数据库的融合。</strong></p>
+<br>
+
+<blockquote>
+<p>假设你之前没有接触过后端的数据库，例如 MySQL(关系型数据库) 或 MongDB(非关系型数据库)，那么换一种说法你就容易理解了。</p>
+<p>关系型数据库：相当使用 TypeScript 来编写代码，也就是说在声明每一个变量之前，都应该提前定义好该变量的各种属性类型，例句：属性名，属性值类型，甚至哪些是必须必填属性，哪些是可选属性。</p>
+<p>非关系型数据库：相当于使用 JavaScript 来编写代码，每一个变量是什么类型，以及拥有什么属性都是灵活自由的，没有限定的。</p>
+</blockquote>
+<blockquote>
+<p>所谓 “关系” 说直白点、简单点，就是某一个对象究竟应该有用哪些属性值。</p>
+</blockquote>
+<br>
+
+<p><strong>再次重复一遍：IndexedDB 的每一个操作(增删改查)都是异步的</strong></p>
+<p>有了异步的概念，那么接下来在学习的时候就比较容易理解代码了。</p>
+<br>
+
+<h4 id="操作-1：创建或连接数据库"><a href="#操作-1：创建或连接数据库" class="headerlink" title="操作 1：创建或连接数据库"></a>操作 1：创建或连接数据库</h4><p>localStorage、sessionStorage 使用 <code>getItem()</code> 来来获取数据，而 IndexedDB 使用 <code>.open()</code> 来尝试创建或连接数据库。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">const request = window.indexedDB.open(&#x27;mydb&#x27;, 1)</span><br><span class="line">let db = null</span><br><span class="line"></span><br><span class="line">//当各种操作发生错误时</span><br><span class="line">request.onerror = (eve) =&gt; &#123;</span><br><span class="line">    alert(&#x27;读写 IndexedDB 发生错误：&#x27;, eve.target.errorCode)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//当第2次连接该数据库</span><br><span class="line">request.onsuccess = (eve) =&gt; &#123;</span><br><span class="line">    db = eve.target.result</span><br><span class="line">    console.log(&#x27;初次创建或打开 IndexedDB 成功&#x27;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//当第1次创建数据库</span><br><span class="line">request.onupgradeneeded = (eve) =&gt; &#123;</span><br><span class="line">    db = eve.target.result</span><br><span class="line">    //...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>代码解读：<code>.open(&#39;mydb&#39;, 1)</code></p>
+<ol>
+<li><p>第 1 个参数为即将 创建或连接 的数据库名</p>
+</li>
+<li><p>第 2 个参数表示该数据库的版本号，默认为 1</p>
+<blockquote>
+<p>数据库版本号不同，那么意味着相当于完全不同的两个同名数据库</p>
+</blockquote>
+</li>
+</ol>
+<br>
+
+<p>代码解读：3 个常规事件</p>
+<ol>
+<li>onerror：假设执行 <code>.open(&#39;mydb&#39;, 1)</code> 发生错误，对应的事件回调是 <code>onerror</code>，即表明 创建或连接失败。</li>
+<li>onupgradeneeded：假设第一次执行<code>.open(&#39;mydb&#39;, 1)</code> ，此时 IndexedDB 中还没有 “mydb” 这个数据库，那么会 创建 该数据库，对应的事件回调是<code>onupgradeneeded</code> 事件，即表明 创建成功。</li>
+<li>onsuccess：假设第二次执行 <code>.open(&#39;mydb&#39;, 1)</code>，此时 IndexedDB 中已经存在 “mydb” 这个数据库，那么会 连接 该数据库，对应的事件回调是 <code>onsuccess</code> 事件，即表明 连接成功。</li>
+</ol>
+<p>请牢记一件事：当执行 <code>.open(&#39;mydb&#39;, 1)</code> 后，<code>onupgradeneeded</code> 或 <code>onsuccess</code> 只会发生两者中的一个事件回调。</p>
+<p>我们可以在这 2 个事件的回调函数的参数中得到我们想要数据库的操作连接。</p>
+<blockquote>
+<p>这也是为什么在上述的 2 个回调函数中，我们分别都要添加 <code>db = eve.target.result</code> 这行代码。</p>
+</blockquote>
+<br>
+
+<p>当我们拿到数据库连接后，就可以对这个数据库添加 表 了。</p>
+<br>
+
+<h4 id="操作-2：创建表"><a href="#操作-2：创建表" class="headerlink" title="操作 2：创建表"></a>操作 2：创建表</h4><p>我们直接把创建表的代码，写到 <code>onupgradeneeded</code> 中。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">request.onupgradeneeded = (eve) =&gt; &#123;</span><br><span class="line">    db = eve.target.result</span><br><span class="line">    //创建一个名为 users 的表，并对其进行配置</span><br><span class="line">    const objectStore = db.createObjectStore(&#x27;users&#x27;, &#123; keyPath: &#x27;id&#x27;, autoIncrement: true &#125;)</span><br><span class="line">    objectStore.createIndex(&#x27;id&#x27;, &#x27;id&#x27;, &#123; unique: true &#125;)</span><br><span class="line">    objectStore.createIndex(&#x27;sid&#x27;, &#x27;sid&#x27;, &#123; unique: true &#125;)</span><br><span class="line">    objectStore.createIndex(&#x27;name&#x27;, &#x27;name&#x27;, &#123; unique: false &#125;)</span><br><span class="line">    objectStore.createIndex(&#x27;tel&#x27;, &#x27;tel&#x27;, &#123; unique: false &#125;)</span><br><span class="line">    objectStore.createIndex(&#x27;age&#x27;, &#x27;age&#x27;, &#123; unique: false &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<p>代码解读：db.createObjectStore()</p>
+<ol>
+<li><p>db 是我们拿到的数据库连接</p>
+</li>
+<li><p>并通过 db.createObjectStore() 函数可以创建表</p>
+</li>
+<li><p><code>.createObjectStore()</code>中 第 1 个参数为表名，第 2 个参数为该表的配置参数</p>
+</li>
+<li><p>配置参数我们写的是 <code>&#123; keyPath: &#39;id&#39;, autoIncrement: true &#125;</code></p>
+<blockquote>
+<p>这就意味着 id 每次会自增，也意味着我们无需也不能设置 id 的值，把 id 值的权限交给了 IndexedDB 自动来帮我们处理。</p>
+</blockquote>
+</li>
+<li><p>对应的含义为：keyPath——主键、autoIncrement——是否自增</p>
+</li>
+<li><p>该方法最终返回得到的就是 表</p>
+</li>
+</ol>
+<br>
+
+<p>当我们拿到一个具体的表 后，例如 上述代码中的 objectStore，接下来就是配置该表中的各个键(也就是行)。</p>
+<p>代码解读：objectStore.createIndex()</p>
+<ol>
+<li>第 1 个参数：键名</li>
+<li>第 2 个参数：键路径</li>
+<li>第 3 个参数：键的配置项，其中<code>unique</code> 用于表示该键是否是唯一不可重复的</li>
+</ol>
+<p>在实际操作中，通常情况下我们都会将第 1 和第 2 个参数值设置的完全相同。</p>
+<blockquote>
+<p>别问为什么，因为大家都是这样做的。</p>
+</blockquote>
+<br>
+
+<h4 id="操作-3：获取表"><a href="#操作-3：获取表" class="headerlink" title="操作 3：获取表"></a>操作 3：获取表</h4><p>无论哪种操作，我们都需要先提前设定好是以哪种模式来操作表的。</p>
+<blockquote>
+<p>实际对应的是 IDBTransaction：<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/IDBTransaction">https://developer.mozilla.org/zh-CN/docs/Web/API/IDBTransaction</a></p>
+</blockquote>
+<br>
+
+<p>并且还根据需要添加对应的 成功失败 回调。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">//明确以哪种方式来操作该表</span><br><span class="line">const usersTrans = db.transaction(&#x27;users&#x27;, &#x27;readwrite&#x27;)</span><br><span class="line"></span><br><span class="line">//配置操作对应的 3 个事件回调</span><br><span class="line"></span><br><span class="line">usersTrans.onsuccess = (eve) =&gt; &#123;</span><br><span class="line">    console.log(&#x27;事务成功&#x27;)</span><br><span class="line">&#125;</span><br><span class="line">usersTrans.oncomplete = (eve) =&gt; &#123;</span><br><span class="line">    console.log(&#x27;事务完成&#x27;, eve)</span><br><span class="line">&#125;</span><br><span class="line">usersTrans.onerror = (eve) =&gt; &#123;</span><br><span class="line">    console.log(&#x27;事务失败&#x27;, eve)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//拿到该表的实际控制权</span><br><span class="line">const usersStore = usersTrans.objectStore(&#x27;users&#x27;)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>请注意：事务的完成和成功是 2 个概念</p>
+<p>onsuccess：相当于 Promise 中的 resolve</p>
+<p>onerror：相当于 Promise 中的 reject</p>
+<p>oncomplete：相当于 Promise 中的 finally</p>
+</blockquote>
+<br>
+
+<h4 id="操作-4：向某个表中添加一条数据"><a href="#操作-4：向某个表中添加一条数据" class="headerlink" title="操作 4：向某个表中添加一条数据"></a>操作 4：向某个表中添加一条数据</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">usersStore.add(&#123;</span><br><span class="line">    sid: 38,</span><br><span class="line">    name: &#x27;puxiao&#x27;,</span><br><span class="line">    tel: `158$&#123;Math.floor(Math.random() * 10000000)&#125;`,</span><br><span class="line">    age: 18 + Math.floor(Math.random() * 20)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>对于写入操作，一定要确保 usersStore 的模式为 “readwrite”</p>
+</blockquote>
+<p>特别强调：</p>
+<p>由于之前代码中，我们在配置 sid 时使用的是 <code>&#123; unique: true &#125;</code>，因此一定要确保 当添加多条记录时，每一条记录中 sid 的值是唯一，不可重复的，否则会添加失败报错。</p>
+<br>
+
+<h4 id="操作-5：以游标的形式逐条读取数据"><a href="#操作-5：以游标的形式逐条读取数据" class="headerlink" title="操作 5：以游标的形式逐条读取数据"></a>操作 5：以游标的形式逐条读取数据</h4><p>我们先说一下什么叫 “游标”，游标 这个是传统数据库中的一个名词。</p>
+<p>你可以把它想象成是 JS 中数组循环 <code>forEach( ( item, index ) =&gt; &#123; ... &#125; )</code> 中的 index。</p>
+<p>只不过这个 index 不是一个数字，有很多自身的其他方法。</p>
+<p>具体详细的可以查看：<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/IDBCursor">https://developer.mozilla.org/zh-CN/docs/Web/API/IDBCursor</a></p>
+<br>
+
+<p><strong>示例代码：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">const usersTrans = db.transaction(&#x27;users&#x27;, &#x27;readonly&#x27;)</span><br><span class="line">const usersStore = usersTrans.objectStore(&#x27;users&#x27;)</span><br><span class="line">const request = usersStore.openCursor()</span><br><span class="line"></span><br><span class="line">request.onsuccess = (eve) =&gt; &#123;</span><br><span class="line">    const cursor = eve.target.result</span><br><span class="line">    if (cursor) &#123;</span><br><span class="line">        console.log(cursor.value)</span><br><span class="line">        cursor.continue()</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        console.log(&#x27;已经全部读取完毕&#x27;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>代码解读：</p>
+<ol>
+<li>由于是读取，因此我们将事务模式设定为只读模式 “readonly”</li>
+<li>在得到表后，通过它的 .openCursor() ，以游标的形式来打开访问该表中的内容</li>
+<li>在打开游标的 onsuccess 事件回调，我们可以通过 eve.target.result 来得到当前游标</li>
+<li>默认第 1 个游标对应的是该表中第 1 行(数据)，我们就可以通过该游标的 .value 属性得到该条数据具体的值</li>
+<li>由于游标默认只表示当前一条数据，我们可以通过执行游标的 .continue()，让游标切换到下一条数据中</li>
+<li>假设当前表中没有数据，或者是已经全部读取完毕，那么此时游标的值在条件判断语境中不为真，我们就可以看作是 “已经全部读取完毕”</li>
+</ol>
+<br>
+
+<h4 id="操作-6：一次读取表中全部的数据"><a href="#操作-6：一次读取表中全部的数据" class="headerlink" title="操作 6：一次读取表中全部的数据"></a>操作 6：一次读取表中全部的数据</h4><p>通常情况下，我们是推荐以游标形式，逐条遍历整个表的，因为这样对于一次操作的性能来说压力不大。</p>
+<p>但是假设数据量不大的情况下，我们也可以通过表的 <code>getAll()</code> 函数一次性获取表中全部的数据。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const usersTrans = db.transaction(&#x27;users&#x27;, &#x27;readonly&#x27;)</span><br><span class="line">const usersStore = usersTrans.objectStore(&#x27;users&#x27;)</span><br><span class="line">const request = usersStore.getAll()</span><br><span class="line">request.onsuccess = (eve) =&gt; &#123;</span><br><span class="line">    console.log(eve.target.result) //输出全部数据</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h4 id="操作-7：查找某-id-对应的数据"><a href="#操作-7：查找某-id-对应的数据" class="headerlink" title="操作 7：查找某 id 对应的数据"></a>操作 7：查找某 id 对应的数据</h4><p>可以通过表的 .get() 方法去根据某些条件查找数据。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const usersTrans = db.transaction(&#x27;users&#x27;, &#x27;readonly&#x27;)</span><br><span class="line">const usersStore = usersTrans.objectStore(&#x27;users&#x27;)</span><br><span class="line">const request = usersStore.get(38)</span><br><span class="line">request.onsuccess = (eve) =&gt; &#123;</span><br><span class="line">    console.log(eve.target.result)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>请注意：假设检索到数据后，会克隆并返回该数据。</p>
+<br>
+
+<p>关于查询，还有一个对象：IDBKeyRange，它可以用于设置某种范围内的查询。</p>
+<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/IDBKeyRange">https://developer.mozilla.org/zh-CN/docs/Web/API/IDBKeyRange</a></p>
+<br>
+
+<h4 id="操作-8：清空表中的数据"><a href="#操作-8：清空表中的数据" class="headerlink" title="操作 8：清空表中的数据"></a>操作 8：清空表中的数据</h4><p>执行表的 .clear() 方法可以清空表中全部的数据。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const usersTrans = db.transaction(&#x27;users&#x27;, &#x27;readwrite&#x27;)</span><br><span class="line">const usersStore = usersTrans.objectStore(&#x27;users&#x27;)</span><br><span class="line">const request = usersStore.clear()</span><br><span class="line">request.onsuccess = (eve) =&gt; &#123;</span><br><span class="line">    console.log(eve.target.result)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<p>以上为一些常规的各种 IndexedDB 表的操作。</p>
+<p>更多细节和方法请查阅：<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/IDBObjectStore/">https://developer.mozilla.org/zh-CN/docs/Web/API/IDBObjectStore/</a></p>
+<br>
+
+<h4 id="回顾总结"><a href="#回顾总结" class="headerlink" title="回顾总结"></a>回顾总结</h4><p>我们回顾一下上面学习到的这些对象。</p>
+<blockquote>
+<p>实际上只需要把这些对象关系搞清楚，用到谁了直接去 MDN 查看它们具体的 属性&#x2F;方法&#x2F;事件 即可。</p>
+</blockquote>
+<ol>
+<li>IndexedDB：不可以被我们自己实例化，只能通过 window.indexedDB 来获取</li>
+<li>IDBDatabase：数据库连接，管控数据库创建、连接、断开等</li>
+<li>IDBTransaction：事务，需要配置哪种模式下进行各种操作</li>
+<li>IDBObjectStore：表，在创建之初需要设定表中行的每一项键名，键路径，以及是否为唯一值</li>
+<li>IDBRequest：请求操作，增删改查都属于请求操作中的一种，增删改查拥有的共同的请求和回调机制</li>
+<li>IDBCursor：游标，当前表中正在读取到的 “索引”，若游标有值的情况下，可以通过游标的 .continue() 切换到下一条游标(数据)</li>
+</ol>
+<br>
+
+<p>作为初学者，假设上面这些对象概念和关系理解清楚后，那么就算是会使用 IndexedDB 了。</p>
+<p>当然，IndexedDB 还有更多其他复杂的操作，例如不同表之间进行关联和查询。</p>
+<blockquote>
+<p>这里面牵扯到 IDBIndex：<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/IDBIndex">https://developer.mozilla.org/zh-CN/docs/Web/API/IDBIndex</a></p>
+</blockquote>
+<br>
+
+<h4 id="IndexedDB-相关的第三方库"><a href="#IndexedDB-相关的第三方库" class="headerlink" title="IndexedDB 相关的第三方库"></a>IndexedDB 相关的第三方库</h4><p>由于 IndexedDB 的各种查询都是异步的，并且属于比较原始的那种 API 操作。</p>
+<p>在实际的项目开发中，为了方便和快速，可以使用第三方，那些针对 IndexedDB 再次封装的类库。</p>
+<p>目前使用比较多的是：</p>
+<ol>
+<li>dexie.js：<a target="_blank" rel="noopener" href="https://github.com/dexie/Dexie.js">https://github.com/dexie/Dexie.js</a></li>
+<li>localForage：<a target="_blank" rel="noopener" href="https://github.com/localForage/localForage">https://github.com/localForage/localForage</a></li>
+<li>…</li>
+</ol>
+
+    </article>
+    <!-- license -->
+    
+        <div class="license-wrapper">
+            <p>Author：<a href="http://example.com">John Doe</a>
+            <p>Publish date：<a href="http://example.com/2022/03/13/IndexedDB%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">March 13th 2022, 12:00:00 am</a>
+            <p>Update date：<a href="http://example.com/2022/03/13/IndexedDB%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">February 8th 2023, 3:50:59 pm</a>
+            <p>License：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2023/01/30/Nginx%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="Nginx学习笔记">
+                    <div class="nextTitle">Nginx学习笔记</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2021/12/11/React-TypeScript%E4%B8%AD%E4%BD%BF%E7%94%A8Echarts/" title="React-TypeScript中使用Echarts">
+                    <div class="prevTitle">React-TypeScript中使用Echarts</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+</main>
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:375259904@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/ilss" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#IndexedDB-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0"><span class="toc-number">1.</span> <span class="toc-text">IndexedDB 学习笔记</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%89%8D%E7%AB%AF%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8-localStorage%E3%80%81sessionStorage-%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">前端数据存储 localStorage、sessionStorage 的缺点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#IndexedDB-%E8%87%AA%E5%B8%A6%E5%BE%97%E6%84%8F%E7%9A%84%E8%83%8C%E6%99%AF%E9%9F%B3%E4%B9%90%E5%87%BA%E5%9C%BA%E4%BA%86"><span class="toc-number">1.0.0.2.</span> <span class="toc-text">IndexedDB 自带得意的背景音乐出场了</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C-1%EF%BC%9A%E5%88%9B%E5%BB%BA%E6%88%96%E8%BF%9E%E6%8E%A5%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">1.0.0.3.</span> <span class="toc-text">操作 1：创建或连接数据库</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C-2%EF%BC%9A%E5%88%9B%E5%BB%BA%E8%A1%A8"><span class="toc-number">1.0.0.4.</span> <span class="toc-text">操作 2：创建表</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C-3%EF%BC%9A%E8%8E%B7%E5%8F%96%E8%A1%A8"><span class="toc-number">1.0.0.5.</span> <span class="toc-text">操作 3：获取表</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C-4%EF%BC%9A%E5%90%91%E6%9F%90%E4%B8%AA%E8%A1%A8%E4%B8%AD%E6%B7%BB%E5%8A%A0%E4%B8%80%E6%9D%A1%E6%95%B0%E6%8D%AE"><span class="toc-number">1.0.0.6.</span> <span class="toc-text">操作 4：向某个表中添加一条数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C-5%EF%BC%9A%E4%BB%A5%E6%B8%B8%E6%A0%87%E7%9A%84%E5%BD%A2%E5%BC%8F%E9%80%90%E6%9D%A1%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE"><span class="toc-number">1.0.0.7.</span> <span class="toc-text">操作 5：以游标的形式逐条读取数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C-6%EF%BC%9A%E4%B8%80%E6%AC%A1%E8%AF%BB%E5%8F%96%E8%A1%A8%E4%B8%AD%E5%85%A8%E9%83%A8%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="toc-number">1.0.0.8.</span> <span class="toc-text">操作 6：一次读取表中全部的数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C-7%EF%BC%9A%E6%9F%A5%E6%89%BE%E6%9F%90-id-%E5%AF%B9%E5%BA%94%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="toc-number">1.0.0.9.</span> <span class="toc-text">操作 7：查找某 id 对应的数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C-8%EF%BC%9A%E6%B8%85%E7%A9%BA%E8%A1%A8%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="toc-number">1.0.0.10.</span> <span class="toc-text">操作 8：清空表中的数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9B%9E%E9%A1%BE%E6%80%BB%E7%BB%93"><span class="toc-number">1.0.0.11.</span> <span class="toc-text">回顾总结</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#IndexedDB-%E7%9B%B8%E5%85%B3%E7%9A%84%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93"><span class="toc-number">1.0.0.12.</span> <span class="toc-text">IndexedDB 相关的第三方库</span></a></li></ol></li></ol></li></ol></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 9
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/21</span>
+            <a class="archive-post-title" href="/2021/01/21/Blender%E5%9F%BA%E7%A1%80%E6%95%99%E7%A8%8B/">Blender 基础教程</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> Invalid date </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span>
+            <a class="archive-post-title" href="/2023/01/31/MacOS%20brew%20install%20%E6%8A%A5%E9%94%99/">MacOS brew install 报错</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/07</span>
+            <a class="archive-post-title" href="/2023/02/07/%E4%B8%8D%E8%A6%81%E4%B9%B0M2Max%E7%9A%8414%E2%80%9DMacBookPro/">MaxTech:某些情况下,不要买 M2Max 的 14”MacBookPro</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/31</span>
+            <a class="archive-post-title" href="/2023/01/31/MacOS%E6%9F%A5%E7%9C%8BSSD%E5%AF%BF%E5%91%BD%E4%BF%A1%E6%81%AF/">MacOS 查看 SSD 寿命信息</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2022 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/13</span>
+            <a class="archive-post-title" href="/2022/03/13/IndexedDB%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">IndexedDB学习笔记</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/11</span>
+            <a class="archive-post-title" href="/2021/12/11/React-TypeScript%E4%B8%AD%E4%BD%BF%E7%94%A8Echarts/">React-TypeScript中使用Echarts</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span>
+            <a class="archive-post-title" href="/2021/07/13/Koa%E5%B8%B8%E7%94%A8%E4%B8%AD%E9%97%B4%E4%BB%B6/">Koa 常用中间件</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2020 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/20</span>
+            <a class="archive-post-title" href="/2020/05/20/PM2%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">PM2学习笔记</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> Invalid date </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span>
+            <a class="archive-post-title" href="/2023/01/30/Nginx%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">Nginx学习笔记</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="Blender">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Blender
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="MacOS">
+            <span class="iconfont-archer">&#xe60a;</span>
+            MacOS
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="IndexedDB">
+            <span class="iconfont-archer">&#xe60a;</span>
+            IndexedDB
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Linux">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Linux
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="React">
+            <span class="iconfont-archer">&#xe60a;</span>
+            React
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Mac">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Mac
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Nginx">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Nginx
+        </span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "http://example.com",
+        root: siteMetaRoot,
+        author: "John Doe"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>
