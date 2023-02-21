@@ -21,7 +21,7 @@
     <meta name="description" content="">
     <meta property="og:type" content="website">
 <meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/archives/2023/01/index.html">
+<meta property="og:url" content="http://example.com/page/2/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:locale" content="en_US">
 <meta property="article:author" content="John Doe">
@@ -217,8 +217,10 @@
         }
     </script>
     
+        <body class="home-body">
+    
         <!-- header -->
-        <header class="header header-mobile">
+        <header class="header header-mobile index-header">
     <!-- top read progress line -->
     <div class="header-element">
         <div class="read-progress"></div>
@@ -249,7 +251,7 @@
 </header>
 
         <!-- fixed footer -->
-        <footer class="footer-fixed">
+        <footer class="footer-fixed index-footer-fixed">
     <!-- back to top button -->
     <div class="footer-fixed-element">
         
@@ -272,21 +274,34 @@
 
 
 
+    height:50vh;
+
 ">
     
     <!-- 主页  -->
     
+        
+    <!-- 文章页  -->
+    
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/index-bg.jpg)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
             
+                skrjs's Studio.
+            <!-- 文章页  -->
+            
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
+            
+                
+                    it's better to burn out than to fade away
+                
+            <!-- 文章页  -->
             
         </p>
         <!-- 文章页 meta -->
@@ -429,96 +444,27 @@
         
         <article class="index-post">
 	    
-            <a class="abstract-title" href="/2023/01/31/MacOS%E6%9F%A5%E7%9C%8BSSD%E5%AF%BF%E5%91%BD%E4%BF%A1%E6%81%AF/">
-		<img src="/intro/2023-01-31-2.jpg" />
+            <a class="abstract-title" href="/2020/05/20/PM2%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+		<img src="/intro/2020-05-20-1.jpg" />
 		
                 
-                <h3 class="abstract-title-text">MacOS 查看 SSD 寿命信息</h3>
+                <h3 class="abstract-title-text">PM2学习笔记</h3>
             </a>
             <div class="abstract-content">
-                用 Homebrew 安装 smartmontools
-1brew install smartmontools
-
-然后查询
-1smartctl -a disk0
+                PM2 学习笔记安装 pm2全局安装代码1npm i -g pm2
 
 
+我的服务器中 nodejs 安装目录为 &#x2F;software&#x2F;nodejs
 
+安装过程中的代码：
+1234567891011[root@VM_0_8_centos ~]# npm i -g pm2/software/nodejs/bin/pm2 -&gt; /software/nodejs/lib/node_modules/pm2/bin/pm2/software/nodejs/bin/pm2-dev -&gt; /software/nodejs/lib/node_modules/pm2/bin/p...
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/02/08">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/01/31</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-	    
-            <a class="abstract-title" href="/2023/01/31/MacOS%20brew%20install%20%E6%8A%A5%E9%94%99/">
-		<img src="/intro/2023-01-31-1.png" />
-		
-                
-                <h3 class="abstract-title-text">MacOS brew install 报错</h3>
-            </a>
-            <div class="abstract-content">
-                fatal: not in a git directory Error: Command failed with exit 128: git解决方法：
-1brew doctor
-
-按照提示进行操作
-
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/01/31">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/01/31</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-	    
-            <a class="abstract-title" href="/2023/01/30/Nginx%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
-		<img src="/intro/2023-01-30-1.jpg" />
-		
-                
-                <h3 class="abstract-title-text">Nginx学习笔记</h3>
-            </a>
-            <div class="abstract-content">
-                安装安装方式 一：通过 yum 安装CentOS 安装 Nginx：yum install nginx -y
-请注意：Nginx 默认配置文件位置：&#x2F;etc&#x2F;nginx&#x2F;nginx.conf配置文件中，默认网站文件目录：&#x2F;usr&#x2F;share&#x2F;nginx&#x2F;html
-安装方式 二：手工下载，编译，配置，安装访问 Nginx 官网：http://nginx.org/en/download.html ，在 “Stable version” 中找到最新稳定版下载地址。
-以下操作，均通过 shell 命令进行。
-下载：wget h...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/01/31">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/01/30</span>
+                <div class="abstract-date" title="Last updated: 2023/02/01">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/05/20</span>
                 </div>
                 <!-- tags -->
                 
@@ -528,8 +474,97 @@
     
     <!-- paginator  -->
     
+        <nav class="page-nav">
+            <a class="extend prev" rel="prev" href="/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+        </nav>
+    
 </main>
                 <!-- profile -->
+                
+                    <div class="profile">
+    <img class="profile-avatar" alt="avatar" src= /avatar/Misaka.jpg />
+    <div class="profile-name">skrjs</div>
+    
+        <div class="profile-signature">
+            witness me
+        </div>
+    
+    
+        <div class="profile-social">
+            
+    
+        
+            
+                <a href="mailto:375259904@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/ilss" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    
+    
+        <div class="profile-link-item">
+            <a href="/about" class="about-me">
+                
+                ABOUT ME
+            </a>
+        </div>
+    
+    
+    
+</div>
+
                 
             </div>
             <footer class="footer footer-unloaded">

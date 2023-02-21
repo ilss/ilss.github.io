@@ -654,6 +654,47 @@ yarn 的命令和 npm 非常像，可查看我的另外一篇文章：Yarn 安�
         
         <article class="index-post">
 	    
+            <a class="abstract-title" href="/2021/08/22/Threejs%E6%A8%A1%E5%9E%8B%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8/">
+		<img src="/intro/2021-08-22-1.jpg" />
+		
+                
+                <h3 class="abstract-title-text">Threejs 模型本地存储</h3>
+            </a>
+            <div class="abstract-content">
+                Threejs 模型本地存储还是之前那个模型查看的问题，有个模型 50M，每次打开都需要从服务器上请求模型，速度太慢被老板吐槽了，所以考虑将模型存在本地，具体的方案呢，我选定了使用 IndexedDB
+我的思路是这样的：
+首先在 indexedDB 查找有没有这个模型的数据存在
+如果存在就将这个数据查询出来，加载本地的模型
+如果不存在就从服务器请求模型数据，然后存在本地 indexedDB
+
+但是有两个问题：
+从服务器请求到的模型怎么转换成 blob 存进 indexedDB
+threejs 的 gltfLoader 需要提供的是一个确切的 url 地址
+
+开始解决问题：
+首先解决怎么把...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/02/17">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/22</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
+	    
             <a class="abstract-title" href="/2021/07/13/Koa%E5%B8%B8%E7%94%A8%E4%B8%AD%E9%97%B4%E4%BB%B6/">
 		<img src="/intro/2021-07-13-1.jpg" />
 		
@@ -764,43 +805,11 @@ Blender 核心技...
         </article>
         <div class="index-post-divider"></div>
     
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-	    
-            <a class="abstract-title" href="/2020/05/20/PM2%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
-		<img src="/intro/2020-05-20-1.jpg" />
-		
-                
-                <h3 class="abstract-title-text">PM2学习笔记</h3>
-            </a>
-            <div class="abstract-content">
-                PM2 学习笔记安装 pm2全局安装代码1npm i -g pm2
-
-
-我的服务器中 nodejs 安装目录为 &#x2F;software&#x2F;nodejs
-
-安装过程中的代码：
-1234567891011[root@VM_0_8_centos ~]# npm i -g pm2/software/nodejs/bin/pm2 -&gt; /software/nodejs/lib/node_modules/pm2/bin/pm2/software/nodejs/bin/pm2-dev -&gt; /software/nodejs/lib/node_modules/pm2/bin/p...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/02/01">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/05/20</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
     <!-- paginator  -->
+    
+        <nav class="page-nav">
+            <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="extend next" rel="next" href="/archives/page/2/">NEXT &gt;</a>
+        </nav>
     
 </main>
                 <!-- profile -->
@@ -952,7 +961,22 @@ Blender 核心技...
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1003,7 +1027,7 @@ Blender 核心技...
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 10
+        Total : 11
         </div>
         <!-- search  -->
         
@@ -1057,6 +1081,12 @@ Blender 核心技...
         <li class="archive-post-item">
             <span class="archive-post-date">12/11</span>
             <a class="archive-post-title" href="/2021/12/11/React-TypeScript%E4%B8%AD%E4%BD%BF%E7%94%A8Echarts/">React-TypeScript中使用Echarts</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/22</span>
+            <a class="archive-post-title" href="/2021/08/22/Threejs%E6%A8%A1%E5%9E%8B%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8/">Threejs 模型本地存储</a>
         </li>
     
         
@@ -1139,6 +1169,11 @@ Blender 核心技...
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
+        <span class="sidebar-category-name" data-categories="IndexedDB">
+            <span class="iconfont-archer">&#xe60a;</span>
+            IndexedDB
+        </span>
+    
         <span class="sidebar-category-name" data-categories="Blender">
             <span class="iconfont-archer">&#xe60a;</span>
             Blender
@@ -1154,11 +1189,6 @@ Blender 核心技...
             MacOS
         </span>
     
-        <span class="sidebar-category-name" data-categories="IndexedDB">
-            <span class="iconfont-archer">&#xe60a;</span>
-            IndexedDB
-        </span>
-    
         <span class="sidebar-category-name" data-categories="Nginx">
             <span class="iconfont-archer">&#xe60a;</span>
             Nginx
@@ -1172,6 +1202,11 @@ Blender 核心技...
         <span class="sidebar-category-name" data-categories="Mac">
             <span class="iconfont-archer">&#xe60a;</span>
             Mac
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Threejs">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Threejs
         </span>
     
     </div>
