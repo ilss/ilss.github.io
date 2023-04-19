@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="John Doe">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="John Doe">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta name="description" content="Gsap 动画库使用笔记安装 Gsap1npm install gsap  创建动画例如，如果 html 元素创建动画，将 ‘.box’ 类的元素设置 1 秒时间水平移动 200px 的动画。可以这么编写: 123import gsap from &amp;#x27;gsap&amp;#x27;gsap.to(&amp;#x27;.box&amp;#x27;, &amp;#123; x: 200 &amp;#125;)  在 three.js">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Gsap 动画库使用笔记">
+<meta property="og:url" content="http://example.com/2021/02/18/Gsap%E5%8A%A8%E7%94%BB%E5%BA%93%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Gsap 动画库使用笔记安装 Gsap1npm install gsap  创建动画例如，如果 html 元素创建动画，将 ‘.box’ 类的元素设置 1 秒时间水平移动 200px 的动画。可以这么编写: 123import gsap from &amp;#x27;gsap&amp;#x27;gsap.to(&amp;#x27;.box&amp;#x27;, &amp;#123; x: 200 &amp;#125;)  在 three.js">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/article/729c19134fa8c4499934502561074c9164a8cf4b.png@647w_657h_progressive.webp">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/article/b1aa9500c48d8dcb9cfcb706663ac9b4f6aa4435.gif@638w_303h_progressive.webp">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/article/feb4ece2328520705c6108b135f560fdc80fcee0.gif@942w_246h_progressive.webp">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/article/571505cca304e007f8f140f8ac404c23f4cfbfc5.gif@942w_872h_progressive.webp">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/article/06690133d728fa622024e5958e8b7408d1919715.gif@942w_171h_progressive.webp">
+<meta property="og:image" content="https://i0.hdslb.com/bfs/article/1bab035b89eb2ef011aed574f7937065fba17e14.gif@942w_447h_progressive.webp">
+<meta property="article:published_time" content="2021-02-17T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-04-19T02:19:24.422Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i0.hdslb.com/bfs/article/729c19134fa8c4499934502561074c9164a8cf4b.png@647w_657h_progressive.webp">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>Gsap 动画库使用笔记 · skrjs&#39;s Studio</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>skrjs's Studio.</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">skrjs&#39;s Studio.</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">Gsap 动画库使用笔记</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:50vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+    
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                Gsap 动画库使用笔记
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+</div>
+
+                
+                <!-- 文章字数统计 -->
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2021/02/18</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="Gsap-动画库使用笔记"><a href="#Gsap-动画库使用笔记" class="headerlink" title="Gsap 动画库使用笔记"></a>Gsap 动画库使用笔记</h1><h2 id="安装-Gsap"><a href="#安装-Gsap" class="headerlink" title="安装 Gsap"></a>安装 Gsap</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install gsap</span><br></pre></td></tr></table></figure>
+
+<h2 id="创建动画"><a href="#创建动画" class="headerlink" title="创建动画"></a>创建动画</h2><p>例如，如果 html 元素创建动画，将 ‘.box’ 类的元素设置 1 秒时间水平移动 200px 的动画。可以这么编写:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gsap <span class="keyword">from</span> <span class="string">&#x27;gsap&#x27;</span></span><br><span class="line"></span><br><span class="line">gsap.<span class="title function_">to</span>(<span class="string">&#x27;.box&#x27;</span>, &#123; <span class="attr">x</span>: <span class="number">200</span> &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>在 three.js 中如果我们想要将物体，例如立方体移动设置 1 秒时间水平移动 200px 的动画。可以这么编写</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gsap <span class="keyword">from</span> <span class="string">&#x27;gsap&#x27;</span></span><br><span class="line">gsap.<span class="title function_">to</span>(cube.<span class="property">position</span>, &#123; <span class="attr">x</span>: <span class="number">200</span> &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>gsap.to() - 这是最常见的补间类型。是设置当前元素或者变量的状态，到设置的状态的补间动画。所谓的补间动画，就是 2 个关键帧（即 2 种物体的状态）有了，框架自带计算出中间某个时刻的状态，从而填补 2 个状态间，动画的空白时刻，从而实现完整动画。</p>
+<p>gsap.to 有 2 个参数，第一个是目标元素或者变量。如果传入的是.box 之类的 css 字符串选择器，GSAP 在后台使用 document.querySelectorAll()选中页面的匹配的元素。当第一个目标是对象时，GSAP 就会对其属性值进行修改来实现补间动画。</p>
+<h2 id="GSAP-设置动画的属性"><a href="#GSAP-设置动画的属性" class="headerlink" title="GSAP 设置动画的属性"></a>GSAP 设置动画的属性</h2><p><img src="https://i0.hdslb.com/bfs/article/729c19134fa8c4499934502561074c9164a8cf4b.png@647w_657h_progressive.webp"></p>
+<p>下面演示向右水平移动+旋转.box 元素的效果</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">gsap.<span class="title function_">to</span>(<span class="string">&#x27;.box&#x27;</span>, &#123;</span><br><span class="line">  <span class="attr">duration</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="attr">x</span>: <span class="number">200</span>,</span><br><span class="line">  <span class="attr">rotation</span>: <span class="number">360</span>,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i0.hdslb.com/bfs/article/b1aa9500c48d8dcb9cfcb706663ac9b4f6aa4435.gif@638w_303h_progressive.webp"></p>
+<p>默认情况下，GSAP 将使用 px 和度数进行变换，但您可以使用其他单位，例如 vw、弧度，甚至可以进行自己的 JS 计算或相对值！</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">x : <span class="number">200</span> , <span class="comment">// 使用 px 的默认值</span></span><br><span class="line">x : <span class="string">&quot;+=200&quot;</span> <span class="comment">// 相对值</span></span><br><span class="line">x : <span class="string">&#x27;40vw&#x27;</span> , <span class="comment">// 或者传入一个具有不同单位的字符串以供 GSAP 解析</span></span><br><span class="line">x : <span class="function">() =&gt;</span> <span class="variable language_">window</span> 。innerWidth / <span class="number">2</span> , <span class="comment">// 你甚至可以使用函数值进行计算！</span></span><br><span class="line">rotation：<span class="number">360</span> <span class="comment">// 使用默认的度数</span></span><br><span class="line">rotation：“<span class="number">1.</span>25rad” <span class="comment">// 使用弧度</span></span><br></pre></td></tr></table></figure>
+
+<p>如果第一个参数目标不是 html 元素，也可以是对象。。您可以针对任何对象的任何属性，甚至是您创建的任意属性，如下所示</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj = &#123; <span class="attr">myNum</span>: <span class="number">10</span>, <span class="attr">myColor</span>: <span class="string">&#x27;red&#x27;</span> &#125;</span><br><span class="line">gsap.<span class="title function_">to</span>(obj, &#123;</span><br><span class="line">  <span class="attr">myNum</span>: <span class="number">200</span>,</span><br><span class="line">  <span class="attr">myColor</span>: <span class="string">&#x27;blue&#x27;</span>,</span><br><span class="line">  <span class="attr">onUpdate</span>: <span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(obj.<span class="property">myNum</span>, obj.<span class="property">myColor</span>),</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>这里可以让 obj.myNum 值从 10 变化到 200，也可以让颜色 myColor 的值从红色变化到蓝色。每一次更新值的时候，执行 onUpdate 所设置的回调函数。</p>
+<h2 id="GSAP-特殊属性控制动画"><a href="#GSAP-特殊属性控制动画" class="headerlink" title="GSAP 特殊属性控制动画"></a>GSAP 特殊属性控制动画</h2><p>duration：动画持续时间（秒） 默认值：0.5</p>
+<p>delay：动画开始前的延迟量（秒）</p>
+<p>repeat：动画应该重复多少次。-1 为一直重复</p>
+<p>yoyo：如果为 true，则每隔一个重复，补间将沿相反方向运行。（像悠悠球一样）默认值：false</p>
+<p>ease：控制动画期间的变化率。</p>
+<p>onComplete：动画完成时调用的函数</p>
+<p>onUpdate：动画值更新时调用的函数</p>
+<h2 id="ease-动画属性设置"><a href="#ease-动画属性设置" class="headerlink" title="ease 动画属性设置"></a>ease 动画属性设置</h2><p>缓动可能是动作设计中最重要的部分。精心挑选的轻松将为您的动画增添个性并注入活力。</p>
+<p>在下面的演示中看看 no ease 和 bounce ease 之间的区别！绿色盒子以匀速的速度旋转，而紫色盒子带有“反弹”旋转动画，感觉就不一样。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">gsap.<span class="title function_">to</span>(<span class="string">&#x27;.green&#x27;</span>, &#123; <span class="attr">rotation</span>: <span class="number">360</span>, <span class="attr">duration</span>: <span class="number">2</span>, <span class="attr">ease</span>: <span class="string">&#x27;none&#x27;</span> &#125;)</span><br><span class="line"></span><br><span class="line">gsap.<span class="title function_">to</span>(<span class="string">&#x27;.purple&#x27;</span>, &#123; <span class="attr">rotation</span>: <span class="number">360</span>, <span class="attr">duration</span>: <span class="number">2</span>, <span class="attr">ease</span>: <span class="string">&#x27;bounce.out&#x27;</span> &#125;)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i0.hdslb.com/bfs/article/feb4ece2328520705c6108b135f560fdc80fcee0.gif@942w_246h_progressive.webp"></p>
+<p>在引擎内部，“ease”是一种数学计算，用于控制补间期间的变化率。但不用担心，框架会为您做所有的数学计算！您只需坐下来选择最适合我们的动画的效果即可。</p>
+<p>对于大多数效果，分为三种类型 in、out、inOut。这些控制了轻松过程中的动量。</p>
+<p>像这样的 设置 ease：”power1.out” 是 UI 过渡的最佳选择；它们启动速度很快，这有助于 UI 感觉反应灵敏，然后它们在接近尾声时放松，给人一种自然的摩擦感。</p>
+<p>理解 ease 的最好方法是玩转 ease 配置的可视化工具！</p>
+<p>地址：<a target="_blank" rel="noopener" href="https://greensock.com/get-started/#greenSockEaseVisualizer">https://greensock.com/get-started/#greenSockEaseVisualizer</a></p>
+<p><img src="https://i0.hdslb.com/bfs/article/571505cca304e007f8f140f8ac404c23f4cfbfc5.gif@942w_872h_progressive.webp"></p>
+<h2 id="Staggers-交错"><a href="#Staggers-交错" class="headerlink" title="Staggers 交错"></a>Staggers 交错</h2><p>这是我们最喜欢的技巧之一！如果补间有多个目标，您可以轻松地在每个动画的开始之间添加一些交错效果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">gsap.<span class="title function_">from</span>(<span class="string">&#x27;.box&#x27;</span>, &#123;</span><br><span class="line">  <span class="attr">duration</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="attr">scale</span>: <span class="number">0.5</span>,</span><br><span class="line">  <span class="attr">opacity</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="attr">delay</span>: <span class="number">0.5</span>,</span><br><span class="line">  <span class="attr">stagger</span>: <span class="number">0.2</span>,</span><br><span class="line">  <span class="attr">ease</span>: <span class="string">&#x27;elastic&#x27;</span>,</span><br><span class="line">  <span class="attr">force3D</span>: <span class="literal">true</span>,</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&#x27;.box&#x27;</span>).<span class="title function_">forEach</span>(<span class="keyword">function</span> (<span class="params">box</span>) &#123;</span><br><span class="line">  box.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    gsap.<span class="title function_">to</span>(<span class="string">&#x27;.box&#x27;</span>, &#123;</span><br><span class="line">      <span class="attr">duration</span>: <span class="number">0.5</span>,</span><br><span class="line">      <span class="attr">opacity</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="attr">y</span>: -<span class="number">100</span>,</span><br><span class="line">      <span class="attr">stagger</span>: <span class="number">0.1</span>,</span><br><span class="line">      <span class="attr">ease</span>: <span class="string">&#x27;back.in&#x27;</span>,</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i0.hdslb.com/bfs/article/06690133d728fa622024e5958e8b7408d1919715.gif@942w_171h_progressive.webp"><br>这里 stagger 设置 0.2，即为将.box 选中多个元素设置为每隔 0.2 秒开始运动 1 个元素实现效果。 作者：老陈打码 <a target="_blank" rel="noopener" href="https://www.bilibili.com/read/cv17889719">https://www.bilibili.com/read/cv17889719</a> 出处：bilibili</p>
+<h2 id="时间线-Timelines"><a href="#时间线-Timelines" class="headerlink" title="时间线-Timelines"></a>时间线-Timelines</h2><p>时间线是创建易于调整、有弹性的动画序列的关键。当您将补间添加到时间线时，默认情况下，它们会按照添加的顺序一个接一个地播放。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建时间线动画</span></span><br><span class="line"><span class="keyword">let</span> tl = gsap.<span class="title function_">timeline</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 现在用tl代替以前的gsap来设置动画即可。</span></span><br><span class="line">tl.<span class="title function_">to</span>(<span class="string">&#x27;.green&#x27;</span>, &#123; <span class="attr">x</span>: <span class="number">600</span>, <span class="attr">duration</span>: <span class="number">2</span> &#125;)</span><br><span class="line">tl.<span class="title function_">to</span>(<span class="string">&#x27;.purple&#x27;</span>, &#123; <span class="attr">x</span>: <span class="number">600</span>, <span class="attr">duration</span>: <span class="number">1</span> &#125;)</span><br><span class="line">tl.<span class="title function_">to</span>(<span class="string">&#x27;.orange&#x27;</span>, &#123; <span class="attr">x</span>: <span class="number">600</span>, <span class="attr">duration</span>: <span class="number">1</span> &#125;)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i0.hdslb.com/bfs/article/1bab035b89eb2ef011aed574f7937065fba17e14.gif@942w_447h_progressive.webp"></p>
+<h2 id="Threejs-场景种应用"><a href="#Threejs-场景种应用" class="headerlink" title="Threejs 场景种应用"></a>Threejs 场景种应用</h2><p>设置立方体旋转</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">gsap.<span class="title function_">to</span>(cube.<span class="property">rotation</span>, &#123;</span><br><span class="line">  <span class="attr">x</span>: <span class="number">2</span> * <span class="title class_">Math</span>.<span class="property">PI</span>,</span><br><span class="line">  <span class="attr">duration</span>: <span class="number">5</span>,</span><br><span class="line">  <span class="attr">ease</span>: <span class="string">&#x27;power1.inOut&#x27;</span>,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>设置立方体来回往返运动</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置动画</span></span><br><span class="line"><span class="keyword">var</span> animate1 = gsap.<span class="title function_">to</span>(cube.<span class="property">position</span>, &#123;</span><br><span class="line">  <span class="attr">x</span>: <span class="number">5</span>,</span><br><span class="line">  <span class="attr">duration</span>: <span class="number">5</span>,</span><br><span class="line">  <span class="attr">ease</span>: <span class="string">&#x27;power1.inOut&#x27;</span>,</span><br><span class="line">  <span class="comment">//   设置重复的次数，无限次循环-1</span></span><br><span class="line">  <span class="attr">repeat</span>: -<span class="number">1</span>,</span><br><span class="line">  <span class="comment">//   往返运动</span></span><br><span class="line">  <span class="attr">yoyo</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="comment">//   delay，延迟2秒运动</span></span><br><span class="line">  <span class="attr">delay</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="comment">// 当动画完成时，执行回调函数</span></span><br><span class="line">  <span class="attr">onComplete</span>: <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;动画完成&#x27;</span>)</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">//当动画开始时，执行回调函数</span></span><br><span class="line">  <span class="attr">onStart</span>: <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;动画开始&#x27;</span>)</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>让双击画面，控制立方体动画暂停和恢复动画，前面创建的 animate1 这个动画实例，有 isActive 方法，可以用来获取当前动画是暂停还是播放状态，播放状态时 isActive 方法返回为 true，暂停时为 false，根据这个状态来调用 pause 方法来暂停动画和恢复动画。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;dblclick&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">//   console.log(animate1);</span></span><br><span class="line">  <span class="keyword">if</span> (animate1.<span class="title function_">isActive</span>()) &#123;</span><br><span class="line">    <span class="comment">//   暂停</span></span><br><span class="line">    animate1.<span class="title function_">pause</span>()</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">//   恢复</span></span><br><span class="line">    animate1.<span class="title function_">resume</span>()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="综合上述代码"><a href="#综合上述代码" class="headerlink" title="综合上述代码"></a>综合上述代码</h2><p>在前面创建的项目中的 main.js 文件写入代码</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> <span class="variable constant_">THREE</span> <span class="keyword">from</span> <span class="string">&#x27;three&#x27;</span></span><br><span class="line"><span class="comment">// 导入轨道控制器</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">OrbitControls</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;three/examples/jsm/controls/OrbitControls&#x27;</span></span><br><span class="line"><span class="comment">// 导入动画库</span></span><br><span class="line"><span class="keyword">import</span> gsap <span class="keyword">from</span> <span class="string">&#x27;gsap&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// console.log(THREE);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 目标：掌握gsap设置各种动画效果</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 1、创建场景</span></span><br><span class="line"><span class="keyword">const</span> scene = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">Scene</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2、创建相机</span></span><br><span class="line"><span class="keyword">const</span> camera = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">PerspectiveCamera</span>(</span><br><span class="line">  <span class="number">75</span>,</span><br><span class="line">  <span class="variable language_">window</span>.<span class="property">innerWidth</span> / <span class="variable language_">window</span>.<span class="property">innerHeight</span>,</span><br><span class="line">  <span class="number">0.1</span>,</span><br><span class="line">  <span class="number">1000</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置相机位置</span></span><br><span class="line">camera.<span class="property">position</span>.<span class="title function_">set</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">10</span>)</span><br><span class="line">scene.<span class="title function_">add</span>(camera)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 添加物体</span></span><br><span class="line"><span class="comment">// 创建几何体</span></span><br><span class="line"><span class="keyword">const</span> cubeGeometry = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">BoxGeometry</span>(<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line"><span class="keyword">const</span> cubeMaterial = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">MeshBasicMaterial</span>(&#123; <span class="attr">color</span>: <span class="number">0xffff00</span> &#125;)</span><br><span class="line"><span class="comment">// 根据几何体和材质创建物体</span></span><br><span class="line"><span class="keyword">const</span> cube = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">Mesh</span>(cubeGeometry, cubeMaterial)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 修改物体的位置</span></span><br><span class="line"><span class="comment">// cube.position.set(5, 0, 0);</span></span><br><span class="line"><span class="comment">// cube.position.x = 3;</span></span><br><span class="line"><span class="comment">// 缩放</span></span><br><span class="line"><span class="comment">// cube.scale.set(3, 2, 1);</span></span><br><span class="line"><span class="comment">// cube.scale.x = 5;</span></span><br><span class="line"><span class="comment">// 旋转</span></span><br><span class="line">cube.<span class="property">rotation</span>.<span class="title function_">set</span>(<span class="title class_">Math</span>.<span class="property">PI</span> / <span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="string">&#x27;XZY&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将几何体添加到场景中</span></span><br><span class="line">scene.<span class="title function_">add</span>(cube)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(cube)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化渲染器</span></span><br><span class="line"><span class="keyword">const</span> renderer = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">WebGLRenderer</span>()</span><br><span class="line"><span class="comment">// 设置渲染的尺寸大小</span></span><br><span class="line">renderer.<span class="title function_">setSize</span>(<span class="variable language_">window</span>.<span class="property">innerWidth</span>, <span class="variable language_">window</span>.<span class="property">innerHeight</span>)</span><br><span class="line"><span class="comment">// console.log(renderer);</span></span><br><span class="line"><span class="comment">// 将webgl渲染的canvas内容添加到body</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">appendChild</span>(renderer.<span class="property">domElement</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// // 使用渲染器，通过相机将场景渲染进来</span></span><br><span class="line"><span class="comment">// renderer.render(scene, camera);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建轨道控制器</span></span><br><span class="line"><span class="keyword">const</span> controls = <span class="keyword">new</span> <span class="title class_">OrbitControls</span>(camera, renderer.<span class="property">domElement</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 添加坐标轴辅助器</span></span><br><span class="line"><span class="keyword">const</span> axesHelper = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">AxesHelper</span>(<span class="number">5</span>)</span><br><span class="line">scene.<span class="title function_">add</span>(axesHelper)</span><br><span class="line"><span class="comment">// 设置时钟</span></span><br><span class="line"><span class="keyword">const</span> clock = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">Clock</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置动画</span></span><br><span class="line"><span class="keyword">var</span> animate1 = gsap.<span class="title function_">to</span>(cube.<span class="property">position</span>, &#123;</span><br><span class="line">  <span class="attr">x</span>: <span class="number">5</span>,</span><br><span class="line">  <span class="attr">duration</span>: <span class="number">5</span>,</span><br><span class="line">  <span class="attr">ease</span>: <span class="string">&#x27;power1.inOut&#x27;</span>,</span><br><span class="line">  <span class="comment">//   设置重复的次数，无限次循环-1</span></span><br><span class="line">  <span class="attr">repeat</span>: -<span class="number">1</span>,</span><br><span class="line">  <span class="comment">//   往返运动</span></span><br><span class="line">  <span class="attr">yoyo</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="comment">//   delay，延迟2秒运动</span></span><br><span class="line">  <span class="attr">delay</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="attr">onComplete</span>: <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;动画完成&#x27;</span>)</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">onStart</span>: <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;动画开始&#x27;</span>)</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;)</span><br><span class="line">gsap.<span class="title function_">to</span>(cube.<span class="property">rotation</span>, &#123; <span class="attr">x</span>: <span class="number">2</span> * <span class="title class_">Math</span>.<span class="property">PI</span>, <span class="attr">duration</span>: <span class="number">5</span>, <span class="attr">ease</span>: <span class="string">&#x27;power1.inOut&#x27;</span> &#125;)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;dblclick&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">//   console.log(animate1);</span></span><br><span class="line">  <span class="keyword">if</span> (animate1.<span class="title function_">isActive</span>()) &#123;</span><br><span class="line">    <span class="comment">//   暂停</span></span><br><span class="line">    animate1.<span class="title function_">pause</span>()</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">//   恢复</span></span><br><span class="line">    animate1.<span class="title function_">resume</span>()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">  renderer.<span class="title function_">render</span>(scene, camera)</span><br><span class="line">  <span class="comment">//   渲染下一帧的时候就会调用render函数</span></span><br><span class="line">  <span class="title function_">requestAnimationFrame</span>(render)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">render</span>()</span><br></pre></td></tr></table></figure>
+
+    </article>
+    <!-- license -->
+    
+        <div class="license-wrapper">
+            <p>Author：<a href="http://example.com">John Doe</a>
+            <p>Publish date：<a href="http://example.com/2021/02/18/Gsap%E5%8A%A8%E7%94%BB%E5%BA%93%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/">February 18th 2021, 12:00:00 am</a>
+            <p>Update date：<a href="http://example.com/2021/02/18/Gsap%E5%8A%A8%E7%94%BB%E5%BA%93%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/">April 19th 2023, 10:19:24 am</a>
+            <p>License：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2021/07/13/Koa%E5%B8%B8%E7%94%A8%E4%B8%AD%E9%97%B4%E4%BB%B6/" title="Koa 常用中间件">
+                    <div class="nextTitle">Koa 常用中间件</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2021/02/13/React%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="React学习笔记">
+                    <div class="prevTitle">React学习笔记</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+</main>
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:375259904@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/ilss" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Gsap-%E5%8A%A8%E7%94%BB%E5%BA%93%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0"><span class="toc-number">1.</span> <span class="toc-text">Gsap 动画库使用笔记</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-Gsap"><span class="toc-number">1.1.</span> <span class="toc-text">安装 Gsap</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%8A%A8%E7%94%BB"><span class="toc-number">1.2.</span> <span class="toc-text">创建动画</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GSAP-%E8%AE%BE%E7%BD%AE%E5%8A%A8%E7%94%BB%E7%9A%84%E5%B1%9E%E6%80%A7"><span class="toc-number">1.3.</span> <span class="toc-text">GSAP 设置动画的属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GSAP-%E7%89%B9%E6%AE%8A%E5%B1%9E%E6%80%A7%E6%8E%A7%E5%88%B6%E5%8A%A8%E7%94%BB"><span class="toc-number">1.4.</span> <span class="toc-text">GSAP 特殊属性控制动画</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ease-%E5%8A%A8%E7%94%BB%E5%B1%9E%E6%80%A7%E8%AE%BE%E7%BD%AE"><span class="toc-number">1.5.</span> <span class="toc-text">ease 动画属性设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Staggers-%E4%BA%A4%E9%94%99"><span class="toc-number">1.6.</span> <span class="toc-text">Staggers 交错</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E7%BA%BF-Timelines"><span class="toc-number">1.7.</span> <span class="toc-text">时间线-Timelines</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Threejs-%E5%9C%BA%E6%99%AF%E7%A7%8D%E5%BA%94%E7%94%A8"><span class="toc-number">1.8.</span> <span class="toc-text">Threejs 场景种应用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%BC%E5%90%88%E4%B8%8A%E8%BF%B0%E4%BB%A3%E7%A0%81"><span class="toc-number">1.9.</span> <span class="toc-text">综合上述代码</span></a></li></ol></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 14
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/07</span>
+            <a class="archive-post-title" href="/2023/02/07/%E4%B8%8D%E8%A6%81%E4%B9%B0M2Max%E7%9A%8414%E2%80%9DMacBookPro/">MaxTech:某些情况下,不要买 M2Max 的 14”MacBookPro</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/31</span>
+            <a class="archive-post-title" href="/2023/01/31/MacOS%E6%9F%A5%E7%9C%8BSSD%E5%AF%BF%E5%91%BD%E4%BF%A1%E6%81%AF/">MacOS 查看 SSD 寿命信息</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2022 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2022/04/05/Three.js%E4%BC%98%E5%8C%96%E4%B9%8BOffscreenCanvas%E4%B8%8EWebWorker/">Three.js优化之OffscreenCanvas与WebWorker</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/21</span>
+            <a class="archive-post-title" href="/2022/03/21/Curl%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">Curl常用命令</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/13</span>
+            <a class="archive-post-title" href="/2022/03/13/IndexedDB%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">IndexedDB学习笔记</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/11</span>
+            <a class="archive-post-title" href="/2021/12/11/React-TypeScript%E4%B8%AD%E4%BD%BF%E7%94%A8Echarts/">React-TypeScript中使用Echarts</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/22</span>
+            <a class="archive-post-title" href="/2021/08/22/Threejs%E6%A8%A1%E5%9E%8B%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8/">Threejs 模型本地存储</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span>
+            <a class="archive-post-title" href="/2021/07/13/Koa%E5%B8%B8%E7%94%A8%E4%B8%AD%E9%97%B4%E4%BB%B6/">Koa 常用中间件</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/18</span>
+            <a class="archive-post-title" href="/2021/02/18/Gsap%E5%8A%A8%E7%94%BB%E5%BA%93%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/">Gsap 动画库使用笔记</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> Invalid date </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span>
+            <a class="archive-post-title" href="/2023/01/31/MacOS%20brew%20install%20%E6%8A%A5%E9%94%99/">MacOS brew install 报错</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> Invalid date </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span>
+            <a class="archive-post-title" href="/2023/01/30/Nginx%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">Nginx学习笔记</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/13</span>
+            <a class="archive-post-title" href="/2021/02/13/React%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">React学习笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/21</span>
+            <a class="archive-post-title" href="/2021/01/21/Blender%E5%9F%BA%E7%A1%80%E6%95%99%E7%A8%8B/">Blender 基础教程</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2020 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/20</span>
+            <a class="archive-post-title" href="/2020/05/20/PM2%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">PM2学习笔记</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="Linux">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Linux
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="IndexedDB">
+            <span class="iconfont-archer">&#xe60a;</span>
+            IndexedDB
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Gsap">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Gsap
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="MacOS">
+            <span class="iconfont-archer">&#xe60a;</span>
+            MacOS
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Nginx">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Nginx
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Blender">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Blender
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="React">
+            <span class="iconfont-archer">&#xe60a;</span>
+            React
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Threejs">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Threejs
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Mac">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Mac
+        </span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "http://example.com",
+        root: siteMetaRoot,
+        author: "John Doe"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>
