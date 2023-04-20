@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="John Doe">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="John Doe">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta name="description" content="Threejs 弃用 API 列表音频（Audio）- AudioAudio.load 已被弃用。 请使用 AudioLoader。 - AudioAnalyserAudioAnalyser.getData() 已被重命名为 AudioAnalyser.getFrequencyData()。 - BinaryTextureLoaderBinaryTextureLoader 已被重命名为 DataT">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Threejs 弃用API列表">
+<meta property="og:url" content="http://example.com/2021/02/13/Threejs%E5%BC%83%E7%94%A8API%E5%88%97%E8%A1%A8/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Threejs 弃用 API 列表音频（Audio）- AudioAudio.load 已被弃用。 请使用 AudioLoader。 - AudioAnalyserAudioAnalyser.getData() 已被重命名为 AudioAnalyser.getFrequencyData()。 - BinaryTextureLoaderBinaryTextureLoader 已被重命名为 DataT">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-02-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-04-20T02:00:29.068Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>Threejs 弃用API列表 · skrjs&#39;s Studio</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>skrjs's Studio.</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">skrjs&#39;s Studio.</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">Threejs 弃用API列表</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:50vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+    
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                Threejs 弃用API列表
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+</div>
+
+                
+                <!-- 文章字数统计 -->
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2021/02/13</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="Threejs-弃用-API-列表"><a href="#Threejs-弃用-API-列表" class="headerlink" title="Threejs 弃用 API 列表"></a>Threejs 弃用 API 列表</h1><h2 id="音频（Audio）"><a href="#音频（Audio）" class="headerlink" title="音频（Audio）"></a>音频（Audio）</h2><h3 id="Audio"><a href="#Audio" class="headerlink" title="- Audio"></a>- Audio</h3><p>Audio.load 已被弃用。 请使用 AudioLoader。</p>
+<h3 id="AudioAnalyser"><a href="#AudioAnalyser" class="headerlink" title="- AudioAnalyser"></a>- AudioAnalyser</h3><p>AudioAnalyser.getData() 已被重命名为 AudioAnalyser.getFrequencyData()。</p>
+<h3 id="BinaryTextureLoader"><a href="#BinaryTextureLoader" class="headerlink" title="- BinaryTextureLoader"></a>- BinaryTextureLoader</h3><p>BinaryTextureLoader 已被重命名为 DataTextureLoader。</p>
+<h2 id="缓冲器（Buffers）"><a href="#缓冲器（Buffers）" class="headerlink" title="缓冲器（Buffers）"></a>缓冲器（Buffers）</h2><h3 id="BufferAttribute"><a href="#BufferAttribute" class="headerlink" title="- BufferAttribute"></a>- BufferAttribute</h3><p>BufferAttribute.length 已被重命名为 BufferAttribute.count。</p>
+<p>BufferAttribute.copyIndicesArray() 已被删除。</p>
+<h3 id="DynamicBufferAttribute"><a href="#DynamicBufferAttribute" class="headerlink" title="- DynamicBufferAttribute"></a>- DynamicBufferAttribute</h3><p>DynamicBufferAttribute 已被删除。 请使用 BufferAttribute.setDynamic( true )。</p>
+<h3 id="Int8Attribute"><a href="#Int8Attribute" class="headerlink" title="- Int8Attribute"></a>- Int8Attribute</h3><p>Int8Attribute 已被删除。 请使用 Int8BufferAttribute。</p>
+<h3 id="Uint8Attribute"><a href="#Uint8Attribute" class="headerlink" title="- Uint8Attribute"></a>- Uint8Attribute</h3><p>Uint8Attribute 已被删除。 请使用 Uint8BufferAttribute。</p>
+<h3 id="Uint8ClampedAttribute"><a href="#Uint8ClampedAttribute" class="headerlink" title="- Uint8ClampedAttribute"></a>- Uint8ClampedAttribute</h3><p>Uint8ClampedAttribute 已被删除。 请使用 Uint8ClampedBufferAttribute。</p>
+<h3 id="Int16Attribute"><a href="#Int16Attribute" class="headerlink" title="- Int16Attribute"></a>- Int16Attribute</h3><p>Int16Attribute 已被删除。 请使用 Int16BufferAttribute。</p>
+<h3 id="Uint16Attribute"><a href="#Uint16Attribute" class="headerlink" title="- Uint16Attribute"></a>- Uint16Attribute</h3><p>Uint16Attribute 已被删除。 请使用 Uint16BufferAttribute。</p>
+<h3 id="Int32Attribute"><a href="#Int32Attribute" class="headerlink" title="- Int32Attribute"></a>- Int32Attribute</h3><p>Int32Attribute 已被删除。 请使用 Int32BufferAttribute。</p>
+<h3 id="Uint32Attribute"><a href="#Uint32Attribute" class="headerlink" title="- Uint32Attribute"></a>- Uint32Attribute</h3><p>Uint32Attribute 已被删除。 请使用 Uint32BufferAttribute。</p>
+<h3 id="Float32Attribute"><a href="#Float32Attribute" class="headerlink" title="- Float32Attribute"></a>- Float32Attribute</h3><p>Float32Attribute 已被删除。 请使用 Float32BufferAttribute。</p>
+<h3 id="Float64Attribute"><a href="#Float64Attribute" class="headerlink" title="- Float64Attribute"></a>- Float64Attribute</h3><p>Float64Attribute 已被删除。 请使用 Float64BufferAttribute。</p>
+<h2 id="摄像机（Cameras）"><a href="#摄像机（Cameras）" class="headerlink" title="摄像机（Cameras）"></a>摄像机（Cameras）</h2><h3 id="PerspectiveCamera"><a href="#PerspectiveCamera" class="headerlink" title="- PerspectiveCamera"></a>- PerspectiveCamera</h3><p>PerspectiveCamera.setLens() 已被弃用。 请使用 PerspectiveCamera.setFocalLength() 和 PerspectiveCamera.filmGauge() 来对摄像机拍摄进行设置。</p>
+<h2 id="常量（Constants）"><a href="#常量（Constants）" class="headerlink" title="常量（Constants）"></a>常量（Constants）</h2><h3 id="LineStrip"><a href="#LineStrip" class="headerlink" title="- LineStrip"></a>- LineStrip</h3><h3 id="LinePieces"><a href="#LinePieces" class="headerlink" title="- LinePieces"></a>- LinePieces</h3><p>LinePieces mode 已经不再对 Lines 进行支持。 请创建一个 LineSegments 。</p>
+<h2 id="核心（Core）"><a href="#核心（Core）" class="headerlink" title="核心（Core）"></a>核心（Core）</h2><h3 id="EventDispatcher"><a href="#EventDispatcher" class="headerlink" title="- EventDispatcher"></a>- EventDispatcher</h3><p>EventDispatcher.apply 已被删除。 请继承或者 Object.assign 其原型来“混合”。Inherit or Object.assign the prototype to mix-in。</p>
+<h3 id="Raycaster"><a href="#Raycaster" class="headerlink" title="- Raycaster"></a>- Raycaster</h3><p>Raycaster.params.PointCloud 已被重命名为 Raycaster.params.Points。</p>
+<h3 id="Uniform"><a href="#Uniform" class="headerlink" title="- Uniform"></a>- Uniform</h3><p>Uniform.dynamic 已被删除。 请使用 object.onBeforeRender()。</p>
+<p>Uniform.onUpdate 已被删除。 请使用 object.onBeforeRender() 。</p>
+<h2 id="附件（Extras）"><a href="#附件（Extras）" class="headerlink" title="附件（Extras）"></a>附件（Extras）</h2><h3 id="ClosedSplineCurve3"><a href="#ClosedSplineCurve3" class="headerlink" title="- ClosedSplineCurve3"></a>- ClosedSplineCurve3</h3><p>ClosedSplineCurve3 已被弃用。 请使用 CatmullRomCurve3。</p>
+<h3 id="SplineCurve3"><a href="#SplineCurve3" class="headerlink" title="- SplineCurve3"></a>- SplineCurve3</h3><p>SplineCurve3 已被弃用。 请使用 CatmullRomCurve3。</p>
+<h2 id="几何体（Geometry）"><a href="#几何体（Geometry）" class="headerlink" title="几何体（Geometry）"></a>几何体（Geometry）</h2><p>Geometry.computeTangents() 已被删除。</p>
+<p>Geometry.computeLineDistances() 已被删除。 请使用 Line.computeLineDistances。</p>
+<h3 id="BufferGeometry"><a href="#BufferGeometry" class="headerlink" title="- BufferGeometry"></a>- BufferGeometry</h3><p>BufferGeometry.addIndex 已被重命名为 BufferGeometry.setIndex。</p>
+<p>BufferGeometry.addDrawCall 现在是 BufferGeometry.addGroup。</p>
+<p>BufferGeometry.clearDrawCalls 现在是 BufferGeometry.clearGroups。</p>
+<p>BufferGeometry.computeTangents 已被删除。</p>
+<p>BufferGeometry.computeOffsets 已被删除。</p>
+<p>BufferGeometry.drawcalls 已被重命名为 BufferGeometry.groups。</p>
+<p>BufferGeometry.offsets 已被重命名为 BufferGeometry.groups。</p>
+<h3 id="CubeGeometry"><a href="#CubeGeometry" class="headerlink" title="- CubeGeometry"></a>- CubeGeometry</h3><p>CubeGeometry 已被重命名为 BoxGeometry。</p>
+<h3 id="Geometry"><a href="#Geometry" class="headerlink" title="- Geometry"></a>- Geometry</h3><p>Geometry.computeTangents() 已被删除。</p>
+<h3 id="GeometryUtils"><a href="#GeometryUtils" class="headerlink" title="- GeometryUtils"></a>- GeometryUtils</h3><p>GeometryUtils.merge 已被移动到了 Geometry，请使用 Geometry.merge( geometry2, matrix, materialIndexOffset )。</p>
+<p>GeometryUtils.center 已被移动到了 Geometry，请使用 Geometry.center( ) 。</p>
+<h3 id="Plane"><a href="#Plane" class="headerlink" title="- Plane"></a>- Plane</h3><p>Plane.isIntersectionLine() 已被重命名为 Plane.intersectsLine()。</p>
+<h2 id="辅助工具（Helpers）"><a href="#辅助工具（Helpers）" class="headerlink" title="辅助工具（Helpers）"></a>辅助工具（Helpers）</h2><h3 id="BoundingBoxHelper"><a href="#BoundingBoxHelper" class="headerlink" title="- BoundingBoxHelper"></a>- BoundingBoxHelper</h3><p>BoundingBoxHelper 已被弃用。 请使用 BoxHelper。</p>
+<h3 id="EdgesHelper"><a href="#EdgesHelper" class="headerlink" title="- EdgesHelper"></a>- EdgesHelper</h3><p>EdgesHelper 已被删除。 请使用 EdgesGeometry。</p>
+<h3 id="GridHelper"><a href="#GridHelper" class="headerlink" title="- GridHelper"></a>- GridHelper</h3><p>GridHelper.setColors() 已被弃用，请在构造器中传递它们。</p>
+<h3 id="WireframeHelper"><a href="#WireframeHelper" class="headerlink" title="- WireframeHelper"></a>- WireframeHelper</h3><p>WireframeHelper 已被删除。 请使用 WireframeGeometry。</p>
+<h2 id="灯光（Lights）"><a href="#灯光（Lights）" class="headerlink" title="灯光（Lights）"></a>灯光（Lights）</h2><h3 id="Light"><a href="#Light" class="headerlink" title="- Light"></a>- Light</h3><p>Light.onlyShadow 已被删除。</p>
+<p>Light.shadowCameraLeft 现在是 Light.shadow.camera.left。</p>
+<p>Light.shadowCameraRight 现在是 Light.shadow.camera.right。</p>
+<p>Light.shadowCameraTop 现在是 Light.shadow.camera.top。</p>
+<p>Light.shadowCameraBottom 现在是 Light.shadow.camera.bottom。</p>
+<p>Light.shadowCameraNear 现在是 Light.shadow.camera.near。</p>
+<p>Light.shadowCameraFar 现在是 Light.shadow.camera.far。</p>
+<p>Light.shadowCameraVisible 已被删除。 请使用 CameraHelper ( light.shadow.camera )。</p>
+<p>Light.shadowMapWidth 现在是 Light.shadow.mapSize.width。</p>
+<p>Light.shadowMapHeight 现在是 Light.shadow.mapSize.height。</p>
+<h2 id="加载器（Loaders）"><a href="#加载器（Loaders）" class="headerlink" title="加载器（Loaders）"></a>加载器（Loaders）</h2><h3 id="XHRLoader"><a href="#XHRLoader" class="headerlink" title="- XHRLoader"></a>- XHRLoader</h3><p>XHRLoader 已被重命名为 FileLoader。</p>
+<h3 id="JSONLoader"><a href="#JSONLoader" class="headerlink" title="- JSONLoader"></a>- JSONLoader</h3><p>JSONLoader has been removed from core.</p>
+<h2 id="数学（Maths）"><a href="#数学（Maths）" class="headerlink" title="数学（Maths）"></a>数学（Maths）</h2><h3 id="Box2"><a href="#Box2" class="headerlink" title="- Box2"></a>- Box2</h3><p>Box2.center 已被重命名为 Box2.getCenter()。</p>
+<p>Box2.empty 已被重命名为 Box2.isEmpty()。</p>
+<p>Box2.isIntersectionBox 已被重命名为 Box2.intersectsBox()。</p>
+<p>Box2.size 已被重命名为 Box2.getSize()。</p>
+<h3 id="Box3"><a href="#Box3" class="headerlink" title="- Box3"></a>- Box3</h3><p>Box3.center 已被重命名为 Box3.getCenter()。</p>
+<p>Box3.empty 已被重命名为 Box3.isEmpty()。</p>
+<p>Box3.isIntersectionBox 已被重命名为 Box3.intersectsBox()。</p>
+<p>Box3.isIntersectionSphere 已被重命名为 Box3.intersectsSphere()。</p>
+<p>Box3.size 已被重命名为 Box3.getSize()。</p>
+<h3 id="Face4"><a href="#Face4" class="headerlink" title="- Face4"></a>- Face4</h3><p>Face4 已被删除。 请使用 Face3。</p>
+<h3 id="Line3"><a href="#Line3" class="headerlink" title="- Line3"></a>- Line3</h3><p>Line3.center 已被重命名为 Line3.getCenter()。</p>
+<h3 id="Math"><a href="#Math" class="headerlink" title="- Math"></a>- Math</h3><p>Math.random16() 已被弃用。 请使用 Math.random() 。</p>
+<h3 id="Matrix3"><a href="#Matrix3" class="headerlink" title="- Matrix3"></a>- Matrix3</h3><p>Matrix3.flattenToArrayOffset 已被弃用。请使用 Matrix3.toArray()。</p>
+<p>Matrix3.multiplyVector3 已被删除。 请使用 vector.applyMatrix3( matrix )。</p>
+<p>Matrix3.multiplyVector3Array 已被重命名为 Matrix3.applyToVector3Array( array )。</p>
+<p>Matrix3.applyToBuffer 已被删除。 请使用 matrix.applyToBufferAttribute( attribute )。</p>
+<p>Matrix3.applyToVector3Array 已被删除。</p>
+<h3 id="Matrix4"><a href="#Matrix4" class="headerlink" title="- Matrix4"></a>- Matrix4</h3><p>Matrix4.flattenToArrayOffset() 已被弃用。请使用 Matrix4.toArray()。</p>
+<p>Matrix4.extractPosition() 已被重命名为 Matrix4.copyPosition( matrix )。</p>
+<p>Matrix4.getPosition() 已被删除。 请使用 Vector3.setFromMatrixPosition( matrix )。</p>
+<p>Matrix4.setRotationFromQuaternion() 已被重命名为 Matrix4.makeRotationFromQuaternion( quaternion )。</p>
+<p>Matrix4.multiplyVector3() 已被删除。 请使用 vector.applyMatrix4( matrix )。</p>
+<p>Matrix4.multiplyVector4() 已被删除。 请使用 vector.applyMatrix4( matrix )。</p>
+<p>Matrix4.multiplyVector3Array() 已被重命名为 Matrix4.applyToVector3Array ( array )。</p>
+<p>Matrix4.rotateAxis() 已被删除。 请使用 Matrix4.transformDirection( matrix )。</p>
+<p>Matrix4.crossVector() 已被删除。 请使用 vector.applyMatrix4( matrix )。</p>
+<p>Matrix4.rotateX() 已被删除。</p>
+<p>Matrix4.rotateY() 已被删除。</p>
+<p>Matrix4.rotateZ() 已被删除。</p>
+<p>Matrix4.rotateByAxis() 已被删除。</p>
+<p>Matrix4.applyToBuffer() 已被删除。 请使用 matrix.applyToBufferAttribute()。</p>
+<p>Matrix4.applyToVector3Array() 已被删除。</p>
+<p>Matrix4.makeFrustum() 已被删除。 请使用 Matrix4.makePerspective( left, right, top, bottom, near, far ) 。</p>
+<h3 id="Quaternion-multiplyVector3"><a href="#Quaternion-multiplyVector3" class="headerlink" title="- Quaternion.multiplyVector3"></a>- Quaternion.multiplyVector3</h3><p>Quaternion.multiplyVector3() 已被删除。 请使用 vector.applyQuaternion( quaternion )。</p>
+<h3 id="Ray"><a href="#Ray" class="headerlink" title="- Ray"></a>- Ray</h3><p>Ray.isIntersectionBox() 已被重命名为 Ray.intersectsBox()。</p>
+<p>Ray.isIntersectionPlane 已被重命名为 Ray.intersectsPlane。</p>
+<p>Ray.isIntersectionSphere 已被重命名为 Ray.intersectsSphere。</p>
+<h3 id="Triangle"><a href="#Triangle" class="headerlink" title="- Triangle"></a>- Triangle</h3><p>Triangle.area() 已被重命名为 Triangle.getArea()。</p>
+<p>Triangle.barycoordFromPoint() 已被重命名为 Triangle.getBarycoord()。</p>
+<p>Triangle.midpoint() 已被重命名为 Triangle.getMidpoint()。</p>
+<p>Triangle.normal() 已被重命名为 Triangle.getNormal()。</p>
+<p>Triangle.plane() 已被重命名为 Triangle.getPlane()。</p>
+<h3 id="Vector2"><a href="#Vector2" class="headerlink" title="- Vector2"></a>- Vector2</h3><p>Vector2.fromAttribute() 已被重命名为 Vector2.fromBufferAttribute()。</p>
+<h3 id="Vector3"><a href="#Vector3" class="headerlink" title="- Vector3"></a>- Vector3</h3><p>Vector3.setEulerFromRotationMatrix() 已被删除。 请使用 Euler.setFromRotationMatrix()。</p>
+<p>Vector3.setEulerFromQuaternion() 已被删除。 请使用 Euler.setFromQuaternion()。</p>
+<p>Vector3.getPositionFromMatrix() 已被重命名为 Vector3.setFromMatrixPosition()。</p>
+<p>Vector3.getScaleFromMatrix() 已被重命名为 Vector3.setFromMatrixScale()。</p>
+<p>Vector3.getColumnFromMatrix() 已被重命名为 Vector3.setFromMatrixColumn()。</p>
+<p>Vector3.applyProjection() 已被删除。 请使用 Vector3.applyMatrix4()。</p>
+<p>Vector3.fromAttribute() 已被重命名为 Vector3.fromBufferAttribute()。</p>
+<h3 id="Vector4"><a href="#Vector4" class="headerlink" title="- Vector4"></a>- Vector4</h3><p>Vector4.fromAttribute() 已被重命名为 Vector4.fromBufferAttribute().</p>
+<h3 id="Vertex"><a href="#Vertex" class="headerlink" title="- Vertex"></a>- Vertex</h3><p>Vertex 已被删除。 请使用 Vector3。</p>
+<h3 id="Spline"><a href="#Spline" class="headerlink" title="- Spline"></a>- Spline</h3><p>Spline 已被删除。 请使用 CatmullRomCurve3。</p>
+<h2 id="材质（Materials）"><a href="#材质（Materials）" class="headerlink" title="材质（Materials）"></a>材质（Materials）</h2><h3 id="Material"><a href="#Material" class="headerlink" title="- Material"></a>- Material</h3><p>Material.wrapAround 已被删除。</p>
+<p>Material.wrapRGB 已被删除。</p>
+<h3 id="MeshFaceMaterial"><a href="#MeshFaceMaterial" class="headerlink" title="- MeshFaceMaterial"></a>- MeshFaceMaterial</h3><p>MeshFaceMaterial 已被删除。 请使用一个材质数组。</p>
+<h3 id="MultiMaterial"><a href="#MultiMaterial" class="headerlink" title="- MultiMaterial"></a>- MultiMaterial</h3><p>MultiMaterial 已被删除。 请使用一个材质数组。</p>
+<h3 id="MeshPhongMaterial"><a href="#MeshPhongMaterial" class="headerlink" title="- MeshPhongMaterial"></a>- MeshPhongMaterial</h3><p>MeshPhongMaterial.metal 已被删除。 请使用 MeshStandardMaterial。</p>
+<h3 id="ParticleBasicMaterial"><a href="#ParticleBasicMaterial" class="headerlink" title="- ParticleBasicMaterial"></a>- ParticleBasicMaterial</h3><p>ParticleBasicMaterial 已被重命名为 PointsMaterial。</p>
+<h3 id="ParticleSystemMaterial"><a href="#ParticleSystemMaterial" class="headerlink" title="- ParticleSystemMaterial"></a>- ParticleSystemMaterial</h3><p>ParticleBasicMaterial 已被重命名为 PointsMaterial。</p>
+<h3 id="PointCloudMaterial"><a href="#PointCloudMaterial" class="headerlink" title="- PointCloudMaterial"></a>- PointCloudMaterial</h3><p>PointCloudMaterial 已被重命名为 PointsMaterial。</p>
+<h3 id="ShaderMaterial-derivatives"><a href="#ShaderMaterial-derivatives" class="headerlink" title="- ShaderMaterial.derivatives"></a>- ShaderMaterial.derivatives</h3><p>ShaderMaterial.derivatives 已被移动到了 ShaderMaterial.extensions.derivatives。</p>
+<h2 id="物体（Objects）"><a href="#物体（Objects）" class="headerlink" title="物体（Objects）"></a>物体（Objects）</h2><h3 id="LOD-objects"><a href="#LOD-objects" class="headerlink" title="- LOD.objects"></a>- LOD.objects</h3><p>LOD.objects 已被重命名为 LOD.levels。</p>
+<h3 id="Object3D"><a href="#Object3D" class="headerlink" title="- Object3D"></a>- Object3D</h3><p>Object3D.eulerOrder 现在是 Object3D.rotation.order。</p>
+<p>Object3D.getChildByName() 已被重命名为 Object3D.getObjectByName()。</p>
+<p>Object3D.renderDepth 已被删除。 请使用 Object3D.renderOrder。</p>
+<p>Object3D.translate() 已被删除。 请使用 Object3D.translateOnAxis( axis, distance )。</p>
+<p>Object3D.useQuaternion 已被删除。 默认情况下，Three.js 库是使用 quaternions（四元数）的。</p>
+<h3 id="LensFlare"><a href="#LensFlare" class="headerlink" title="- LensFlare"></a>- LensFlare</h3><p>LensFlare 已被移动到了 &#x2F;examples&#x2F;js&#x2F;objects&#x2F;Lensflare.js.</p>
+<h3 id="Particle"><a href="#Particle" class="headerlink" title="- Particle"></a>- Particle</h3><p>Particle 已被重命名为 Sprite。</p>
+<h3 id="ParticleSystem"><a href="#ParticleSystem" class="headerlink" title="- ParticleSystem"></a>- ParticleSystem</h3><p>ParticleSystem 已被重命名为 Points。</p>
+<h3 id="PointCloud"><a href="#PointCloud" class="headerlink" title="- PointCloud"></a>- PointCloud</h3><p>PointCloud 已被重命名为 Points。</p>
+<h3 id="Shape"><a href="#Shape" class="headerlink" title="- Shape"></a>- Shape</h3><p>Shape.extrude 已被删除。 请使用 ExtrudeGeometry。</p>
+<p>Shape.makeGeometry 已被删除。 请使用 ShapeGeometry 。</p>
+<h3 id="SkinnedMesh"><a href="#SkinnedMesh" class="headerlink" title="- SkinnedMesh"></a>- SkinnedMesh</h3><p>SkinnedMesh.initBones() has been removed.</p>
+<h2 id="渲染器（Renderer）"><a href="#渲染器（Renderer）" class="headerlink" title="渲染器（Renderer）"></a>渲染器（Renderer）</h2><h3 id="Projector"><a href="#Projector" class="headerlink" title="- Projector"></a>- Projector</h3><p>CanvasRenderer 已被移动到了 &#x2F;examples&#x2F;js&#x2F;renderers&#x2F;CanvasRenderer.js.</p>
+<h3 id="Projector-1"><a href="#Projector-1" class="headerlink" title="- Projector"></a>- Projector</h3><p>Projector 已被移动到了 &#x2F;examples&#x2F;js&#x2F;renderers&#x2F;Projector.js。</p>
+<p>Projector.projectVector() 现在是 Vector.project()。</p>
+<p>Projector.unprojectVector() 现在是 Vector.unproject()。</p>
+<p>Projector:.pickingRay() 现在是 Raycaster.setFromCamera()。</p>
+<h3 id="WebGLProgram"><a href="#WebGLProgram" class="headerlink" title="- WebGLProgram"></a>- WebGLProgram</h3><p>WebGLProgram.uniforms 现在是 WebGLProgram.getUniforms()。</p>
+<p>WebGLProgram.attributes 现在是 WebGLProgram.getAttributes()。</p>
+<h3 id="WebGLRenderer"><a href="#WebGLRenderer" class="headerlink" title="- WebGLRenderer"></a>- WebGLRenderer</h3><p>WebGLRenderer.supportsFloatTextures() 现在是 WebGLRenderer.extensions.get( ‘OES_texture_float’ )。</p>
+<p>WebGLRenderer.supportsHalfFloatTextures() 现在是 WebGLRenderer.extensions.get( ‘OES_texture_half_float’ )。</p>
+<p>WebGLRenderer.supportsStandardDerivatives() 现在是 WebGLRenderer.extensions.get( ‘OES_standard_derivatives’ )。</p>
+<p>WebGLRenderer.supportsCompressedTextureS3TC() 现在是 WebGLRenderer.extensions.get( ‘WEBGL_compressed_texture_s3tc’ )。</p>
+<p>WebGLRenderer.supportsCompressedTexturePVRTC() 现在是 WebGLRenderer.extensions.get( ‘WEBGL_compressed_texture_pvrtc’ )。</p>
+<p>WebGLRenderer.supportsBlendMinMax() 现在是 WebGLRenderer.extensions.get( ‘EXT_blend_minmax’ )。</p>
+<p>WebGLRenderer.supportsVertexTextures() 现在是 WebGLRenderer.capabilities.vertexTextures。</p>
+<p>WebGLRenderer.supportsInstancedArrays() 现在是 WebGLRenderer.extensions.get( ‘ANGLE_instanced_arrays’ )。</p>
+<p>WebGLRenderer.enableScissorTest() 现在是 WebGLRenderer.setScissorTest()。</p>
+<p>WebGLRenderer.initMaterial() 已被删除。</p>
+<p>WebGLRenderer.addPrePlugin() 已被删除。</p>
+<p>WebGLRenderer.addPostPlugin() 已被删除。</p>
+<p>WebGLRenderer.updateShadowMap() 已被删除。</p>
+<p>WebGLRenderer.setFaceCulling() 已被删除。</p>
+<p>WebGLRenderer.setTexture is deprecated, 请使用 WebGLRenderer.setTexture2D()。</p>
+<p>WebGLRenderer.shadowMapEnabled 现在是 WebGLRenderer.shadowMap.enabled。</p>
+<p>WebGLRenderer.shadowMapType 现在是 WebGLRenderer.shadowMap.type。</p>
+<p>WebGLRenderer.shadowMapCullFace 已被删除。请设置 Material.shadowSide。</p>
+<p>WebGLRenderer.shadowMap.cullFace 已被删除。请设置 Material.shadowSide。</p>
+<p>WebGLRenderer.shadowMap.renderReverseSided 已被删除。请设置 Material.shadowSide。</p>
+<p>WebGLRenderer.shadowMap.renderSingleSided 已被删除。请设置 Material.shadowSide。</p>
+<h3 id="WebGLRenderTarget"><a href="#WebGLRenderTarget" class="headerlink" title="- WebGLRenderTarget"></a>- WebGLRenderTarget</h3><p>WebGLRenderTarget.wrapS 现在是 WebGLRenderTarget.texture.wrapS。</p>
+<p>WebGLRenderTarget.wrapT 现在是 WebGLRenderTarget.texture.wrapT。</p>
+<p>WebGLRenderTarget.magFilter 现在是 WebGLRenderTarget.texture.magFilter。</p>
+<p>WebGLRenderTarget.minFilter 现在是 WebGLRenderTarget.texture.minFilter。</p>
+<p>WebGLRenderTarget.anisotropy 现在是 WebGLRenderTarget.texture.anisotropy。</p>
+<p>WebGLRenderTarget.offset 现在是 WebGLRenderTarget.texture.offset。</p>
+<p>WebGLRenderTarget.repeat 现在是 WebGLRenderTarget.texture.repeat。</p>
+<p>WebGLRenderTarget.format 现在是 WebGLRenderTarget.texture.format。</p>
+<p>WebGLRenderTarget.type 现在是 WebGLRenderTarget.texture.type。</p>
+<p>WebGLRenderTarget.generateMipmaps 现在是 WebGLRenderTarget.texture.generateMipmaps.</p>
+<h2 id="纹理（Textures）"><a href="#纹理（Textures）" class="headerlink" title="纹理（Textures）"></a>纹理（Textures）</h2><h3 id="ImageUtils"><a href="#ImageUtils" class="headerlink" title="- ImageUtils"></a>- ImageUtils</h3><p>ImageUtils.loadTexture 已被弃用。 请使用 TextureLoader。</p>
+<p>ImageUtils.loadTextureCube 已被弃用。 请使用 CubeTextureLoader。</p>
+<p>ImageUtils.loadCompressedTexture 已被删除。 请使用 DDSLoader。</p>
+<p>ImageUtils.loadCompressedTextureCube 已被删除。 请使用 DDSLoader。</p>
+
+    </article>
+    <!-- license -->
+    
+        <div class="license-wrapper">
+            <p>Author：<a href="http://example.com">John Doe</a>
+            <p>Publish date：<a href="http://example.com/2021/02/13/Threejs%E5%BC%83%E7%94%A8API%E5%88%97%E8%A1%A8/">February 13th 2021, 12:00:00 am</a>
+            <p>Update date：<a href="http://example.com/2021/02/13/Threejs%E5%BC%83%E7%94%A8API%E5%88%97%E8%A1%A8/">April 20th 2023, 10:00:29 am</a>
+            <p>License：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2021/02/18/Gsap%E5%8A%A8%E7%94%BB%E5%BA%93%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/" title="Gsap 动画库使用笔记">
+                    <div class="nextTitle">Gsap 动画库使用笔记</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2021/02/13/React%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="React学习笔记">
+                    <div class="prevTitle">React学习笔记</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+</main>
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:375259904@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/ilss" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Threejs-%E5%BC%83%E7%94%A8-API-%E5%88%97%E8%A1%A8"><span class="toc-number">1.</span> <span class="toc-text">Threejs 弃用 API 列表</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9F%B3%E9%A2%91%EF%BC%88Audio%EF%BC%89"><span class="toc-number">1.1.</span> <span class="toc-text">音频（Audio）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Audio"><span class="toc-number">1.1.1.</span> <span class="toc-text">- Audio</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AudioAnalyser"><span class="toc-number">1.1.2.</span> <span class="toc-text">- AudioAnalyser</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BinaryTextureLoader"><span class="toc-number">1.1.3.</span> <span class="toc-text">- BinaryTextureLoader</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%93%E5%86%B2%E5%99%A8%EF%BC%88Buffers%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">缓冲器（Buffers）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#BufferAttribute"><span class="toc-number">1.2.1.</span> <span class="toc-text">- BufferAttribute</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DynamicBufferAttribute"><span class="toc-number">1.2.2.</span> <span class="toc-text">- DynamicBufferAttribute</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Int8Attribute"><span class="toc-number">1.2.3.</span> <span class="toc-text">- Int8Attribute</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Uint8Attribute"><span class="toc-number">1.2.4.</span> <span class="toc-text">- Uint8Attribute</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Uint8ClampedAttribute"><span class="toc-number">1.2.5.</span> <span class="toc-text">- Uint8ClampedAttribute</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Int16Attribute"><span class="toc-number">1.2.6.</span> <span class="toc-text">- Int16Attribute</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Uint16Attribute"><span class="toc-number">1.2.7.</span> <span class="toc-text">- Uint16Attribute</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Int32Attribute"><span class="toc-number">1.2.8.</span> <span class="toc-text">- Int32Attribute</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Uint32Attribute"><span class="toc-number">1.2.9.</span> <span class="toc-text">- Uint32Attribute</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Float32Attribute"><span class="toc-number">1.2.10.</span> <span class="toc-text">- Float32Attribute</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Float64Attribute"><span class="toc-number">1.2.11.</span> <span class="toc-text">- Float64Attribute</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%91%84%E5%83%8F%E6%9C%BA%EF%BC%88Cameras%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">摄像机（Cameras）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PerspectiveCamera"><span class="toc-number">1.3.1.</span> <span class="toc-text">- PerspectiveCamera</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E9%87%8F%EF%BC%88Constants%EF%BC%89"><span class="toc-number">1.4.</span> <span class="toc-text">常量（Constants）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#LineStrip"><span class="toc-number">1.4.1.</span> <span class="toc-text">- LineStrip</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LinePieces"><span class="toc-number">1.4.2.</span> <span class="toc-text">- LinePieces</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%EF%BC%88Core%EF%BC%89"><span class="toc-number">1.5.</span> <span class="toc-text">核心（Core）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#EventDispatcher"><span class="toc-number">1.5.1.</span> <span class="toc-text">- EventDispatcher</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Raycaster"><span class="toc-number">1.5.2.</span> <span class="toc-text">- Raycaster</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Uniform"><span class="toc-number">1.5.3.</span> <span class="toc-text">- Uniform</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%84%E4%BB%B6%EF%BC%88Extras%EF%BC%89"><span class="toc-number">1.6.</span> <span class="toc-text">附件（Extras）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ClosedSplineCurve3"><span class="toc-number">1.6.1.</span> <span class="toc-text">- ClosedSplineCurve3</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SplineCurve3"><span class="toc-number">1.6.2.</span> <span class="toc-text">- SplineCurve3</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%A0%E4%BD%95%E4%BD%93%EF%BC%88Geometry%EF%BC%89"><span class="toc-number">1.7.</span> <span class="toc-text">几何体（Geometry）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#BufferGeometry"><span class="toc-number">1.7.1.</span> <span class="toc-text">- BufferGeometry</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CubeGeometry"><span class="toc-number">1.7.2.</span> <span class="toc-text">- CubeGeometry</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Geometry"><span class="toc-number">1.7.3.</span> <span class="toc-text">- Geometry</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GeometryUtils"><span class="toc-number">1.7.4.</span> <span class="toc-text">- GeometryUtils</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Plane"><span class="toc-number">1.7.5.</span> <span class="toc-text">- Plane</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7%EF%BC%88Helpers%EF%BC%89"><span class="toc-number">1.8.</span> <span class="toc-text">辅助工具（Helpers）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#BoundingBoxHelper"><span class="toc-number">1.8.1.</span> <span class="toc-text">- BoundingBoxHelper</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#EdgesHelper"><span class="toc-number">1.8.2.</span> <span class="toc-text">- EdgesHelper</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GridHelper"><span class="toc-number">1.8.3.</span> <span class="toc-text">- GridHelper</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WireframeHelper"><span class="toc-number">1.8.4.</span> <span class="toc-text">- WireframeHelper</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%81%AF%E5%85%89%EF%BC%88Lights%EF%BC%89"><span class="toc-number">1.9.</span> <span class="toc-text">灯光（Lights）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Light"><span class="toc-number">1.9.1.</span> <span class="toc-text">- Light</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD%E5%99%A8%EF%BC%88Loaders%EF%BC%89"><span class="toc-number">1.10.</span> <span class="toc-text">加载器（Loaders）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#XHRLoader"><span class="toc-number">1.10.1.</span> <span class="toc-text">- XHRLoader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JSONLoader"><span class="toc-number">1.10.2.</span> <span class="toc-text">- JSONLoader</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E5%AD%A6%EF%BC%88Maths%EF%BC%89"><span class="toc-number">1.11.</span> <span class="toc-text">数学（Maths）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Box2"><span class="toc-number">1.11.1.</span> <span class="toc-text">- Box2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Box3"><span class="toc-number">1.11.2.</span> <span class="toc-text">- Box3</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Face4"><span class="toc-number">1.11.3.</span> <span class="toc-text">- Face4</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Line3"><span class="toc-number">1.11.4.</span> <span class="toc-text">- Line3</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Math"><span class="toc-number">1.11.5.</span> <span class="toc-text">- Math</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Matrix3"><span class="toc-number">1.11.6.</span> <span class="toc-text">- Matrix3</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Matrix4"><span class="toc-number">1.11.7.</span> <span class="toc-text">- Matrix4</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Quaternion-multiplyVector3"><span class="toc-number">1.11.8.</span> <span class="toc-text">- Quaternion.multiplyVector3</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ray"><span class="toc-number">1.11.9.</span> <span class="toc-text">- Ray</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Triangle"><span class="toc-number">1.11.10.</span> <span class="toc-text">- Triangle</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Vector2"><span class="toc-number">1.11.11.</span> <span class="toc-text">- Vector2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Vector3"><span class="toc-number">1.11.12.</span> <span class="toc-text">- Vector3</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Vector4"><span class="toc-number">1.11.13.</span> <span class="toc-text">- Vector4</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Vertex"><span class="toc-number">1.11.14.</span> <span class="toc-text">- Vertex</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Spline"><span class="toc-number">1.11.15.</span> <span class="toc-text">- Spline</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%90%E8%B4%A8%EF%BC%88Materials%EF%BC%89"><span class="toc-number">1.12.</span> <span class="toc-text">材质（Materials）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Material"><span class="toc-number">1.12.1.</span> <span class="toc-text">- Material</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MeshFaceMaterial"><span class="toc-number">1.12.2.</span> <span class="toc-text">- MeshFaceMaterial</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MultiMaterial"><span class="toc-number">1.12.3.</span> <span class="toc-text">- MultiMaterial</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MeshPhongMaterial"><span class="toc-number">1.12.4.</span> <span class="toc-text">- MeshPhongMaterial</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ParticleBasicMaterial"><span class="toc-number">1.12.5.</span> <span class="toc-text">- ParticleBasicMaterial</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ParticleSystemMaterial"><span class="toc-number">1.12.6.</span> <span class="toc-text">- ParticleSystemMaterial</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PointCloudMaterial"><span class="toc-number">1.12.7.</span> <span class="toc-text">- PointCloudMaterial</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ShaderMaterial-derivatives"><span class="toc-number">1.12.8.</span> <span class="toc-text">- ShaderMaterial.derivatives</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%A9%E4%BD%93%EF%BC%88Objects%EF%BC%89"><span class="toc-number">1.13.</span> <span class="toc-text">物体（Objects）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#LOD-objects"><span class="toc-number">1.13.1.</span> <span class="toc-text">- LOD.objects</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Object3D"><span class="toc-number">1.13.2.</span> <span class="toc-text">- Object3D</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LensFlare"><span class="toc-number">1.13.3.</span> <span class="toc-text">- LensFlare</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Particle"><span class="toc-number">1.13.4.</span> <span class="toc-text">- Particle</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ParticleSystem"><span class="toc-number">1.13.5.</span> <span class="toc-text">- ParticleSystem</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PointCloud"><span class="toc-number">1.13.6.</span> <span class="toc-text">- PointCloud</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Shape"><span class="toc-number">1.13.7.</span> <span class="toc-text">- Shape</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SkinnedMesh"><span class="toc-number">1.13.8.</span> <span class="toc-text">- SkinnedMesh</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B8%B2%E6%9F%93%E5%99%A8%EF%BC%88Renderer%EF%BC%89"><span class="toc-number">1.14.</span> <span class="toc-text">渲染器（Renderer）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Projector"><span class="toc-number">1.14.1.</span> <span class="toc-text">- Projector</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Projector-1"><span class="toc-number">1.14.2.</span> <span class="toc-text">- Projector</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WebGLProgram"><span class="toc-number">1.14.3.</span> <span class="toc-text">- WebGLProgram</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WebGLRenderer"><span class="toc-number">1.14.4.</span> <span class="toc-text">- WebGLRenderer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WebGLRenderTarget"><span class="toc-number">1.14.5.</span> <span class="toc-text">- WebGLRenderTarget</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%B9%E7%90%86%EF%BC%88Textures%EF%BC%89"><span class="toc-number">1.15.</span> <span class="toc-text">纹理（Textures）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ImageUtils"><span class="toc-number">1.15.1.</span> <span class="toc-text">- ImageUtils</span></a></li></ol></li></ol></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 15
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/07</span>
+            <a class="archive-post-title" href="/2023/02/07/%E4%B8%8D%E8%A6%81%E4%B9%B0M2Max%E7%9A%8414%E2%80%9DMacBookPro/">MaxTech:某些情况下,不要买 M2Max 的 14”MacBookPro</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/31</span>
+            <a class="archive-post-title" href="/2023/01/31/MacOS%E6%9F%A5%E7%9C%8BSSD%E5%AF%BF%E5%91%BD%E4%BF%A1%E6%81%AF/">MacOS 查看 SSD 寿命信息</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2022 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2022/04/05/Three.js%E4%BC%98%E5%8C%96%E4%B9%8BOffscreenCanvas%E4%B8%8EWebWorker/">Three.js优化之OffscreenCanvas与WebWorker</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/21</span>
+            <a class="archive-post-title" href="/2022/03/21/Curl%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">Curl常用命令</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/13</span>
+            <a class="archive-post-title" href="/2022/03/13/IndexedDB%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">IndexedDB学习笔记</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/11</span>
+            <a class="archive-post-title" href="/2021/12/11/React-TypeScript%E4%B8%AD%E4%BD%BF%E7%94%A8Echarts/">React-TypeScript中使用Echarts</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/22</span>
+            <a class="archive-post-title" href="/2021/08/22/Threejs%E6%A8%A1%E5%9E%8B%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8/">Threejs 模型本地存储</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span>
+            <a class="archive-post-title" href="/2021/07/13/Koa%E5%B8%B8%E7%94%A8%E4%B8%AD%E9%97%B4%E4%BB%B6/">Koa 常用中间件</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/18</span>
+            <a class="archive-post-title" href="/2021/02/18/Gsap%E5%8A%A8%E7%94%BB%E5%BA%93%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/">Gsap 动画库使用笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/21</span>
+            <a class="archive-post-title" href="/2021/01/21/Blender%E5%9F%BA%E7%A1%80%E6%95%99%E7%A8%8B/">Blender 基础教程</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> Invalid date </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span>
+            <a class="archive-post-title" href="/2023/01/31/MacOS%20brew%20install%20%E6%8A%A5%E9%94%99/">MacOS brew install 报错</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> Invalid date </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span>
+            <a class="archive-post-title" href="/2023/01/30/Nginx%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">Nginx学习笔记</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/13</span>
+            <a class="archive-post-title" href="/2021/02/13/Threejs%E5%BC%83%E7%94%A8API%E5%88%97%E8%A1%A8/">Threejs 弃用API列表</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/13</span>
+            <a class="archive-post-title" href="/2021/02/13/React%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">React学习笔记</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2020 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/20</span>
+            <a class="archive-post-title" href="/2020/05/20/PM2%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">PM2学习笔记</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="Blender">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Blender
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Gsap">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Gsap
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="IndexedDB">
+            <span class="iconfont-archer">&#xe60a;</span>
+            IndexedDB
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Linux">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Linux
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="MacOS">
+            <span class="iconfont-archer">&#xe60a;</span>
+            MacOS
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Nginx">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Nginx
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Threejs">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Threejs
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Mac">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Mac
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="React">
+            <span class="iconfont-archer">&#xe60a;</span>
+            React
+        </span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "http://example.com",
+        root: siteMetaRoot,
+        author: "John Doe"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>
